@@ -1,0 +1,248 @@
+@import "common-colors"
+@import "common-responsive"
+@import "common-btn"
+@import "common-fonts"
+@import "common-form"
+
+// general
+$navbar-w: 5rem
+$navbar-h: 4.5rem
+
+$radius: 2px
+
+// checkboxes mixins and animation 'settings'
+@keyframes tick
+  0%
+    transform: scale(0)
+  90%
+    transform: scale(1.7)
+  100%
+    transform: scale(1)
+
+=appear
+  animation-duration: 150ms
+  animation-timing-function: ease-in
+  animation-name: tick
+
+// mixins
+=keyframes($name)
+  @keyframes #{$name}
+    @content
+
+=handleScreen($screen-size)
+  @media screen and (max-width: $screen-size)
+    @content
+
+=page
+  min-height: 100vh
+  position: relative
+
+  &__container,
+  &>.container
+    padding: 2rem
+    padding-left: $navbar-w + 2rem
+    padding-top: $navbar-h + 2rem
+
+    +screen-xs
+      padding: 1rem
+      //padding-top: $navbar-h + 3rem
+
+=page-heading
+  display: flex
+  justify-content: space-between
+  align-items: center
+  margin-bottom: 2rem
+
+  +screen-xs
+    display: block
+
+  &>button,
+  &>a
+    margin-left: 1rem
+    +screen-xs
+      margin: 0
+      margin-top: 1rem
+      display: block
+      width: 100%
+
+  h1
+    +screen-xs
+      margin-bottom: 1rem
+
+=page-subnav
+  border-bottom: 2px solid $color-border
+
+  & > *
+    +font(.9rem)
+    position: relative
+    display: inline-block
+    padding: 1rem 1.5rem
+    text-transform: uppercase
+    color: $color-bg-light
+    cursor: pointer
+    transition: color .3s
+
+    &:after
+      content: ""
+      height: 2px
+      background: $color-white
+      position: absolute
+      bottom: -2px
+      left: 50%
+      right: 50%
+      opacity: 0
+      transition: left .3s, right .3s, opacity .3s
+
+    &.active
+      color: $color-white
+
+      &:after
+        opacity: 1
+        left: 0
+        right: 0
+
+=search
+  position: relative
+  flex: 1 1
+
+  input
+    +font(1rem, 2rem)
+    color: $color-text
+    border: none
+    padding: 0 .5rem
+    padding-left: 2rem
+    outline: none
+    background: none
+    width: 100%
+
+    &::placeholder
+      color: $color-bg-light
+
+  .fa
+    line-height: 2rem
+    position: absolute
+    left: .5rem
+    color: $color-bg-light
+
+=flexContainer($justify-content: 'flex-start', $align-items: 'stretch', $flex-flow: 'row nowrap')
+  display: flex
+  justify-content: #{$justify-content}
+  align-items: #{$align-items}
+  flex-flow: #{$flex-flow}
+  @content
+
+=flex
+  display: flex
+  flex-flow: row wrap
+
+=card
+  background: $color-card
+  position: relative
+  padding: 3rem 2rem
+  border-radius: $radius
+  box-shadow: 0 60px 120px 0 rgba(0,0,0,0.3)
+
+  &.no-padding
+    padding: 0
+
+=sidebar
+  flex: 1 1 33%
+  padding-left: 4rem
+
+  +screen-xs
+    display: none
+
+=link
+  color: inherit
+
+=loader-white
+  .Loader
+    background: $color-white
+
+=table
+  table
+    width: 100%
+    text-align: left
+    border-collapse: collapse
+
+  th
+    +label
+    line-height: 1.5rem
+    text-align: left
+
+    &:after
+      font-size: .8em
+      width: 0
+      margin-left: .5em
+
+    &.asc:after
+      content: '\25B2'
+    &.desc:after
+      content: '\25BC'
+
+  th,
+  td
+    padding: 1rem
+
+  td
+    line-height: 1.5rem
+    color: $color-text
+    border-top: 1px solid $color-border
+
+    &.actions
+      text-align: right
+
+  tr
+    transition: background .3s
+    &.hover
+      cursor: pointer
+      &:hover
+        background: rgba($color-border, .5)
+
+=underline($weight: 1px, $color: $color-bg)
+  border-bottom: $weight solid $color
+
+=underline-green($weight: 3px, $color: $color-primary)
+  border: none
+  border-bottom: $weight solid $color
+  padding-bottom: .5rem
+
+=underline-brown($weight: 3px, $color: $color-secondary)
+  border: none
+  border-bottom: $weight solid $color
+  padding-bottom: .5rem
+
+=horizontal-scrollbar($thumb-color: $color-gradient, $track-color: $color-bg-light)
+  overflow-x: auto
+  // FF
+  scrollbar-color: $thumb-color $track-color
+  scrollbar-width: thin
+
+  // all Browsers
+  &::-webkit-scrollbar
+    background-color: $track-color
+    height: 1rem
+  &::-webkit-scrollbar-track
+    background-color: $track-color
+    height: 1rem
+  &::-webkit-scrollbar-thumb
+    border-radius: 2px
+    background: $thumb-color
+  &:-moz-scrollbar-thumb
+    border-radius: 2px
+
+=vertical-scrollbar($thumb-color: $color-bg, $track-color: transparent)
+  overflow-y: auto
+  scrollbar-color: $thumb-color $track-color
+  scrollbar-width: thin
+  &::-webkit-scrollbar-track
+    background-color: $track-color
+    width: .75rem
+  &::-webkit-scrollbar
+    background-color: $track-color
+    width: .75rem
+  &::-webkit-scrollbar-thumb
+    border-radius: 10px
+    background-color: $thumb-color
+  &:-moz-scrollbar-thumb
+    border-radius: 10px

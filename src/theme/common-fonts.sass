@@ -1,0 +1,102 @@
+$font-family-primary: 'Avenir', sans-serif
+$form-line-height: 30px
+
+$font-weight-light: 300
+$font-weight-normal: 400
+$font-weight-medium: 500
+$font-weight-semibold: 600
+$font-weight-bold: 700
+$font-weight-heavy: 900
+
+=font($font-size, $line-height: null)
+  font-size: $font-size
+  @if $line-height
+    line-height: $line-height
+  @else
+    line-height: normal
+
+=title
+  +font(1.5rem, 2rem)
+  font-weight: $font-weight-normal
+  color: $color-text
+
+=page-title
+  +font(1.25rem, 2rem)
+  font-weight: $font-weight-bold
+  text-transform: uppercase
+
+  a
+    color: inherit
+
+=label
+  color: $color-label
+
+=h1
+  font-size: 3rem // == 48px
+
+=h2
+  font-size: 1.875rem // == 30px
+
+=h3
+  font-size: 1.5rem // == 24px
+
+=h4
+  font-size: 1.25rem // == 20px
+
+=p
+  font-size: 1rem // == 16px
+
+=p-s
+  font-size: 0.875rem // == 14px
+
+=p-xs
+  font-size: 0.75rem // == 12px
+
+=cap
+  font-size: 0.625rem // == 10px
+  text-transform: uppercase
+
+=caption
+  +font(.8em, 1.3em)
+  color: $color-text
+  font-weight: $font-weight-normal
+
+=weight-light
+  font-weight: $font-weight-light
+
+=weight-normal
+  font-weight: $font-weight-normal
+
+=weight-medium
+  font-weight: $font-weight-medium
+
+=weight-semibold
+  font-weight: $font-weight-semibold
+
+=weight-bold
+  font-weight: $font-weight-bold
+
+=weight-heavy
+  font-weight: $font-weight-heavy
+
+=typography
+  h1,
+  h2,
+  h3,
+  h4,
+    margin: 0
+    font-weight: $font-weight-medium
+
+  h1
+    +h1
+  h2
+    +h2
+  h3
+    +h3
+  h4
+    +h4
+
+=font-unicorn
+  background: $color-gradient
+  -webkit-background-clip: text
+  -webkit-text-fill-color: transparent

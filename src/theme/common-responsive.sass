@@ -1,0 +1,88 @@
+$screen-hg-min: 1440px
+
+// large screen / wide desktop
+$screen-lg-max: $screen-hg-min - 1
+$screen-lg-min: 1200px
+
+// medium screen / desktop
+$screen-md-max: $screen-lg-min - 1
+$screen-md-min: 992px
+
+// small screen / tablet
+$screen-sm-max: $screen-md-min - 1
+$screen-sm-min: 768px
+
+// extra small screen / phone
+$screen-xs-max: $screen-sm-min - 1
+$screen-xs-min: 322px
+
+// ultra small screen / iphone-5
+$screen-us-max: $screen-xs-min - 1
+
+=screen-range($min, $max)
+  @media only screen and (min-width: $min) and (max-width: $max)
+    @content
+
+=screen-min($min)
+  @media only screen and (min-width: $min)
+    @content
+
+=screen-max($max)
+  @media only screen and (max-width: $max)
+    @content
+
+=screen-xs
+  +screen-max($screen-xs-max)
+    @content
+
+=screen-sm
+  +screen-range($screen-sm-min, $screen-sm-max)
+    @content
+
+// small and larger
+=screen-sm-plus
+  +screen-min($screen-sm-min)
+    @content
+
+// small and smaller
+=screen-sm-minus
+  +screen-max($screen-sm-max)
+    @content
+
+=screen-md
+  +screen-range($screen-md-min, $screen-md-max)
+    @content
+
+// medium and larger
+=screen-md-plus
+  +screen-min($screen-md-min)
+    @content
+
+// medium and smaller
+=screen-md-minus
+  +screen-max($screen-md-max)
+    @content
+
+=screen-sm-md
+  +screen-range($screen-sm-min, $screen-md-max)
+    @content
+
+=screen-us
+  +screen-max($screen-us-max)
+    @content
+
+=screen-lg-plus
+  +screen-min($screen-lg-min)
+    @content
+
+=screen-lg
+  +screen-range($screen-lg-min, $screen-lg-max)
+    @content
+
+=screen-lg-minus
+  +screen-max($screen-lg-max)
+    @content
+
+=screen-hg
+  +screen-min($screen-hg-min)
+    @content

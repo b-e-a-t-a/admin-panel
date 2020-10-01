@@ -1,0 +1,288 @@
+@import "common-colors"
+@import "common-btn"
+@import "common-fonts"
+
+$input-padding: 0 .7rem
+$input-width: 340px
+
+=form-group
+  display: flex
+  align-items: baseline
+  position: relative
+  transition: opacity .3s
+
+  +screen-xs
+    +form-group-block
+
+  label
+    padding-right: .8rem
+  &~&
+    margin-top: 1.8rem
+
+  &.disabled
+    opacity: .4
+
+  &~h4,
+    margin-top: 3rem !important
+
+=form-group-block
+  position: relative
+  display: block
+  transition: opacity .3s
+
+  &+&
+    margin-top: 1.5rem
+
+  &.disabled
+    opacity: .4
+
+  input,
+  textarea,
+  button
+    margin-top: .5rem
+
+    &.noLabel
+      margin-top: 0
+
+  &~h4,
+    margin-top: 3rem
+
+=input-container
+  flex: 1 1 60%
+  position: relative
+
+=rating
+  .fa-star.active
+    color: $color-primary-light
+
+=input
+  +font(1rem)
+  font-family: inherit
+  font-weight: $font-weight-normal
+  transition: border-color .3s, background .3s
+  outline: none
+  padding: $input-padding
+  width: 100%
+  color: $color-icon
+  border: 1px solid $color-bg-light
+  box-shadow: none
+  background-color: $color-white
+  height: 3rem
+  flex: 1
+  text-indent: .5em
+
+  &:focus
+    +gradient-border-greyBg
+    border-radius: 5px
+
+  &.err,
+  &.has-value.err
+    border-bottom: 1px solid $color-danger
+    border-radius: 5px
+
+  &.disabled
+    background: $color-bg-light
+
+  &::placeholder
+    color: $color-placeholder
+
+  &.multiselect__input
+    border: none
+    margin: 0 !important
+    padding: 0
+
+=form
+  position: relative
+  input,
+  select,
+  textarea
+    +input
+    flex: 1 1 60%
+    letter-spacing: inherit
+    border-radius: 5px
+
+  textarea
+    height: 7.5rem
+    resize: none
+    padding: .5rem
+    border: 1px solid $color-bg-light
+    line-height: 1.5rem
+
+  label
+    color: $color-text
+    letter-spacing: inherit
+
+    &.required:after
+      content: '*'
+      color: $color-text
+
+    &.err
+      color: $color-danger
+      &:after
+        color: $color-danger
+
+  .datepicker
+    &[error]
+      .mx-input-wrapper
+        border-bottom: 1px solid $color-danger
+    .mx-datepicker
+      &.err,
+      &.has-value.err,
+        border-bottom: 1px solid $color-danger
+        .mx-input
+          &:focus
+            border: none
+
+=form-img
+  flex: 1 1 40%
+  background-size: cover
+  background-position: center
+  background-color: $color-bg
+  border: 1px solid $color-border
+  height: 10rem
+  display: flex
+  justify-content: center
+  align-items: center
+  color: $color-border
+  border-radius: 3px
+
+  span
+    +font(3em)
+
+=radio-button
+  +btn_secondary
+  +font(1em)
+  min-width: auto
+  padding: .6rem
+  flex: 1
+  margin: .5rem
+  white-space: nowrap
+
+  &.err
+    border-color: $color-danger
+
+=radio-labels
+  display: flex
+  flex-flow: row wrap
+  flex: 1 1 60%
+  margin: 0 -.5rem
+
+=radio
+  display: flex
+  align-items: center
+
+  label
+    cursor: pointer
+    padding-left: 1rem
+
+  .check
+    display: inline-block
+    border: 1px solid $color-bg-dark
+    border-radius: 4px
+    transition: border-color .3s
+    cursor: pointer
+    position: relative
+
+    &:before
+      content: ""
+      display: block
+      border-radius: 50%
+      position: absolute
+      top: 0
+      left: 0
+      right: 0
+      bottom: 0
+      transform: scale(0)
+      transition: transform .2s
+      background: $color-secondary
+
+    &.checked:before
+      transform: scale(.7)
+
+    &.err
+      border-color: $color-danger
+
+    input[type='checkbox']
+      opacity: 0
+      width: .7em
+      height: .7em
+      cursor: pointer
+
+=checkbox
+  input
+    position: absolute
+    opacity: 0
+    cursor: pointer
+    height: 0
+    width: 0
+
+  .check
+    position: absolute
+    top: 0
+    left: 0
+    height: 24px
+    width: 24px
+    background-color: $color-white
+    border: 2px solid $color-btn-disabled
+    border-radius: 4px
+    transition: border-color .3s
+    cursor: pointer
+
+    &:hover
+      transform: scale(1.1)
+    &:after
+      content: ""
+      position: absolute
+      display: none
+
+  .checked
+    &.check
+      +gradient-border-whiteBg
+      border-radius: 4px
+      &:after
+        display: inline-block
+        left: 7px
+        top: 3px
+        width: 5px
+        height: 9px
+        border: 2px solid
+        +gradient-border-whiteBg
+        border-width: 0 3px 3px 0
+        transform: rotate(45deg)
+
+  label
+    cursor: pointer
+    padding-left: 1rem
+
+=input-error
+  +font(.8em)
+  position: absolute
+  top: 100%
+  left: 0
+  padding-top: 2px
+  color: $color-danger
+  border-color: $color-danger
+  margin-bottom: 1rem
+
+=btn-add
+  +btn-primary
+  margin-top: 2rem
+  display: block
+
+  &:first-child
+    margin-top: 0
+
+=btn-remove
+  +btn_basic
+  display: inline-block
+  background: $color-danger
+  border: none
+  color: $color-white
+
+=modal-buttons
+  +flexContainer('space-between')
+  margin-top: 3rem
+  button
+    min-width: 30%
+    margin: 0 1rem
+    text-transform: uppercase

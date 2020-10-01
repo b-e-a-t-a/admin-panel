@@ -1,0 +1,107 @@
+@import "./common-style"
+
+
+.mx
+  &-datepicker
+    width: 100%
+    .mx-input
+      border: 1px solid $color-bg-light
+      border-radius: 5px
+      min-height: 40px
+      line-height: 2rem
+      .mx-icon-calendar
+        cursor: pointer
+    &-main
+      z-index: 9999
+
+.multiselect
+  color: $color-text
+  margin-top: .5rem
+  &--disabled
+    background: none
+    opacity: 1
+    .multiselect__select
+      background: none
+
+  &--active
+    +gradient-border-greyBg
+    border-bottom: none
+    .multiselect__select
+      line-height: 1rem
+    .multiselect__content-wrapper
+      +gradient-border-whiteBg
+
+  &__placeholder
+    padding: 0
+    margin: 0
+    display: none
+    color: inherit
+    font-size: 1rem
+
+  &__option
+    +font(1em)
+    line-height: 1rem
+    font-family: inherit
+    font-weight: $font-weight-medium
+
+    &--highlight
+      background: $color-primary-light
+      &:after
+        background: none
+
+    &--selected.multiselect__option--highlight
+      background: $color-bg-light
+      color: $color-black
+
+  &__single
+    +font(1rem)
+    font-weight: $font-weight-medium
+    background: none
+    padding: 0
+    margin-bottom: 0
+    line-height: 3rem
+    max-height: 3rem
+    overflow: hidden
+    text-overflow: ellipsis
+    white-space: nowrap
+
+  &__select
+    top: 0
+    right: 0
+    bottom: 0
+    padding: 0
+    width: 50px
+    height: 48px
+    line-height: 1rem
+
+  &__tags
+    +input
+    padding: 0
+    padding-right: 3.5rem
+    border-radius: 5px
+    height: 3rem
+    line-height: 3rem
+    background-color: inherit
+    color: $color-black
+    &:focus
+      +gradient-border-greyBg
+      border-radius: 5px
+    input
+      line-height: 3rem
+      border: none !important
+      border-bottom: 1px solid $color-border
+      padding-left: 0
+
+  &__tag
+    background-color: $color-primary-light
+    &-icon::after
+      color: $color-white
+    &-icon
+      &:hover
+        background-color: $color-white
+        opacity: .5
+        &::after
+          color: $color-primary-light
+
+  &__content-wrapper
+    border-radius: 0

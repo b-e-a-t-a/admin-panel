@@ -1,0 +1,159 @@
+@import "./common-style"
+@import "./theme-fonts"
+@import "./theme-btns"
+@import "./theme-form"
+
+html
+  font-size: 16px
+  +screen-lg-minus
+    font-size: 14px
+
+body
+  margin: 0
+  padding: 0
+  font-weight: $font-weight-normal
+  font-family: $font-family-primary
+  color: $color-text
+  background: $color-bg
+  line-height: normal
+  letter-spacing: .01em
+
+  &.modal-open
+    overflow: hidden
+
+  &.no-scroll
+    overflow: hidden
+
+  +typography
+
+*
+  box-sizing: border-box
+
+  // &::-webkit-scrollbar
+  //   width: 10px
+
+  // &::-webkit-scrollbar-track
+  //   background: none
+  //   box-shadow: none
+
+  // &::-webkit-scrollbar-thumb
+  //   border-radius: 10px
+  //   background: rgba($color-black, .3)
+
+p
+  margin: 0
+
+a
+  font-family: $font-family-primary
+  text-decoration: none
+
+button
+  font-family: $font-family-primary
+  outline: none
+
+input
+  font-family: $font-family-primary
+  letter-spacing: inherit
+
+.search
+  +search
+
+.fade-quick
+  &-enter,
+  &-leave-to
+    opacity: 0
+
+  &-enter
+  &-leave-active
+    transition: opacity .3s
+
+.fade-slow
+  &-enter,
+  &-leave-to
+    opacity: 0
+
+  &-enter
+  &-leave-active
+    transition: opacity 1s
+
+.slide-left
+  &-enter-active, &-leave-active
+    transition: all .1s
+
+  &-enter, &-leave-active
+    opacity: 0
+
+  &-enter
+    transform: translateX(130px)
+
+  &-leave-active
+    // transform: translateX(-130px)
+
+.slide-right
+  &-enter-active, &-leave-active
+    transition: all .1s
+
+  &-enter, &-leave-active
+    opacity: 0
+
+  &-enter
+    transform: translateX(-130px)
+
+  &-leave-active
+    // transform: translateX(130px)
+
+.slideUpDown
+  &-enter
+    opacity: 0
+
+  &-enter-active
+    transition: opacity .5s
+    animation: slide-up .5s forwards
+
+  &-leave-active
+    transition: opacity .3s
+    opacity: 0
+    animation: slide-down .3s ease-in forwards
+
+@keyframes slide-up
+  from
+    transform: translateY(-2rem)
+  to
+    transform: translateY(0)
+
+@keyframes slide-down
+  from
+    transform: translateY(0)
+  to
+    transform: translateY(-2rem)
+
+.slideLeftRight
+  &-enter
+    opacity: 0
+
+  &-enter-active
+    transition: opacity .5s
+    animation: slide-in .5s forwards
+
+  &-leave-active
+    transition: opacity .3s
+    opacity: 0
+    animation: slide-out .3s ease-in forwards
+
+@keyframes slide-in
+  from
+    transform: translateX(1rem)
+  to
+    transform: translateX(0)
+
+@keyframes slide-out
+  from
+    transform: translateX(0)
+  to
+    transform: translateX(1rem)
+
+.horizontal-scrollbar
+  +horizontal-scrollbar
+
+.vertical-scrollbar
+  +vertical-scrollbar

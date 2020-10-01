@@ -1,0 +1,410 @@
+@import "common-colors"
+@import "common-fonts"
+
+$radius: 2px
+
+$btn-color-primary: $color-primary-light
+$btn-color-primary-hovered: darken($color-primary-light, 10%)
+$btn-color-primary-active: darken($color-primary-light, 20%)
+$btn-color-primary-disabled: lighten($color-primary-light, 50%)
+
+$btn-color-secondary: $color-secondary
+$btn-color-secondary-hovered: darken($color-secondary, 10%)
+$btn-color-secondary-disabled: lighten($color-secondary, 50%)
+
+$btn-color-gradient: $color-gradient
+
+=btn_color($color, $background: null, $text: null)
+  @if $background
+    background: $background
+  @if $text
+    color: $text
+  @else
+    color: $color
+
+=disabled
+  &:disabled,
+  &.disabled
+    cursor: not-allowed
+    @content
+
+=hover
+  &:hover,
+  &.hover
+    @content
+
+=active
+  &.active
+    @content
+
+=hover_and_active
+  &:hover,
+  &.hover,
+  &.active
+    @content
+
+=gradient-border-blackBg
+  background: linear-gradient($color-black,$color-black) padding-box, $color-gradient-60 border-box
+  border: 3px solid transparent
+  border-radius: 50%
+
+=gradient-border-whiteBg($b-radius: $radius)
+  background: linear-gradient($color-white,$color-white) padding-box, $color-gradient-60 border-box
+  border: 1px solid transparent
+  border-radius: $b-radius
+
+=gradient-border-greyBg($b-radius: $radius)
+  background: linear-gradient($color-bg-light,$color-bg-light) padding-box, $color-gradient-60 border-box
+  border: 1px solid transparent
+  border-radius: $b-radius
+
+=gradient-border($b-radius: $radius)
+  background: $color-gradient padding-box, $color-gradient border-box
+  border: 2px solid transparent
+  border-radius: $b-radius
+
+=btn-super-short
+  +font(0.75rem, 1rem)
+  font-weight: $font-weight-medium
+  height: 2.25rem // == 36px
+
+=btn-default-short
+  +font(0.875rem, 2rem) // == 14px
+  font-weight: $font-weight-medium
+  min-height: 2.25rem // == 36px
+
+=btn-extra-short
+  +font(0.875rem, 2.5rem)
+  font-weight: $font-weight-medium
+  height: 2.8rem // == 45px
+
+=btn-default-medium
+  +font(0.875rem, 2.75rem)
+  font-weight: $font-weight-bold
+  height: 3rem // == 48px
+
+=btn-default-tall
+  +font(0.875rem, 3.5rem)
+  font-weight: $font-weight-bold
+  height: 3.75rem // == 60px
+
+=btn-compact
+  padding: .1rem .5rem
+
+=btn-narrow
+  min-width: 8.2rem
+
+=btn-standard
+  padding-left: 1.5rem
+  padding-right: 1.5rem
+
+=btn-wide
+  padding-left: 4rem
+  padding-right: 4rem
+
+=btn-max
+  width: 100%
+
+=btn_basic
+  display: inline-block
+  text-align: center
+  text-decoration: none
+  outline: none
+  padding: 0
+  cursor: pointer
+  border-radius: $radius
+  transition: background .3s, color .3s, font-weight .3s, border-color .3s
+  .fa-spinner,
+  .fa-check,
+  .fa-download
+    margin-right: .5rem
+
+=btn-white
+  +btn_basic
+  +btn_color($color-white, $color-white, $color-black)
+  border: none
+
+  +hover_and_active
+    +btn_color($color-black, $color-icon, $color-black)
+    border: 1px solid $color-white
+
+  +disabled
+    opacity: .5
+    +hover_and_active
+      +btn_color($color-white, $color-white, $color-black)
+
+=btn-black
+  +btn_basic
+  +font(.75rem, 1.3rem)
+  font-weight: $font-weight-normal
+  border: none
+  +btn_color($color-black, $color-black, $color-white)
+
+  +hover_and_active
+    +btn_color($color-black, $color-black, $color-icon)
+
+  +disabled
+    opacity: .5
+    +hover_and_active
+      +btn_color($color-black, $color-black, $color-white)
+
+=btn-ghost
+  +btn_basic
+  +btn_color($color-primary-light-dark, transparent, $color-primary-light-dark)
+  +gradient-border-whiteBg
+
+  +hover_and_active
+    +btn_color($btn-color-gradient, transparent, $color-secondary-dark)
+    +gradient-border-whiteBg
+
+  +disabled
+    opacity: .5
+    +hover_and_active
+      +btn_color($color-primary-light-dark, transparent, $color-primary-light-dark)
+      +gradient-border-whiteBg
+
+=btn-ghost-grey
+  +btn_basic
+  +btn_color($color-primary-light-dark, transparent, $color-primary-light-dark)
+  +gradient-border-greyBg
+
+  +hover_and_active
+    +btn_color($btn-color-gradient, transparent, $color-secondary-dark)
+    +gradient-border-greyBg
+
+  +disabled
+    opacity: .5
+    +hover_and_active
+      +btn_color($color-primary-light-dark, transparent, $color-primary-light-dark)
+      +gradient-border-greyBg
+
+=btn-ghost-secondary
+  +btn_basic
+  +btn_color($color-secondary, transparent, $color-secondary)
+  border: 1px solid $color-secondary
+
+  +hover_and_active
+    +btn_color($color-white, $color-secondary, $color-white)
+    border: 1px solid $color-secondary
+
+  +disabled
+    opacity: .5
+    +hover_and_active
+      +btn_color($color-secondary, transparent, $color-secondary)
+      border: 1px solid $color-secondary
+
+=btn-gradient
+  +btn_basic
+  +btn_color($btn-color-gradient, $btn-color-gradient, $color-white)
+  +gradient-border
+
+  +hover_and_active
+    +btn_color($color-primary-light-dark, $color-white, $color-primary-light-dark)
+    +gradient-border-whiteBg
+
+  +disabled
+    opacity: .5
+    +hover_and_active
+      +btn_color($btn-color-gradient, $btn-color-gradient, $color-white)
+      +gradient-border
+
+=btn-gradient-grey
+  +btn_basic
+  +btn_color($btn-color-gradient, $btn-color-gradient, $color-white)
+  +gradient-border
+
+  +hover_and_active
+    +btn_color($color-primary-light-dark, $color-white, $color-primary-light-dark)
+    +gradient-border-greyBg
+
+  +disabled
+    opacity: .5
+    +hover_and_active
+      +btn_color($btn-color-gradient, $btn-color-gradient, $color-white)
+      +gradient-border
+
+=btn-primary
+  +btn_basic
+  +btn_color($btn-color-primary, $btn-color-primary, $color-white)
+  border: 1px solid $btn-color-primary
+
+  +hover_and_active
+    +btn_color($btn-color-primary, $btn-color-primary-hovered, $color-white)
+    border: 1px solid $btn-color-primary-hovered
+
+  +disabled
+    opacity: .5
+    +hover_and_active
+      +btn_color($btn-color-primary, $btn-color-primary, $color-white)
+
+=btn-primary-light
+  +btn_basic
+  +btn_color($color-primary-light, $color-primary-light, $color-white)
+  border: 1px solid $color-primary-light
+
+  +hover_and_active
+    +btn_color($color-primary-light, $color-white, $color-primary-light)
+    border: 1px solid $color-primary-light
+
+  +disabled
+    opacity: .5
+    +hover_and_active
+      +btn_color($color-primary-light, $color-primary-light, $color-white)
+
+=btn-primary-dark
+  +btn_basic
+  +btn_color($color-primary-light-dark, $color-primary-light-dark, $color-white)
+  border: 1px solid $color-primary-light-dark
+
+  +hover_and_active
+    +btn_color($color-primary-light-dark, $color-white, $color-primary-light-dark)
+    border: 1px solid $color-primary-light-dark
+
+  +disabled
+    opacity: .5
+    +hover_and_active
+      +btn_color($color-primary-light-dark, $color-primary-light-dark, $color-white)
+
+=btn-secondary
+  +btn_basic
+  +btn_color($btn-color-secondary, $btn-color-secondary, $color-white)
+
+  +hover_and_active
+    +btn_color($btn-color-secondary-hovered, $btn-color-secondary-hovered, $color-white)
+
+  +disabled
+    opacity: .5
+    +hover_and_active
+      +btn_color($btn-color-secondary, $btn-color-secondary, $color-white)
+
+=btn-outlined($color: $btn-color-secondary)
+  +btn_basic
+  +btn_color($color,$color-white, $color)
+  box-shadow: 0 0 4px 0 rgba($color-black, .2)
+
+  +hover_and_active
+    +btn_color($color, $color-white, $color)
+    box-shadow: 0 0 4px 0 rgba($color-black, .4)
+
+  +disabled
+    +btn_color($color,$color-white, $color-bg-light)
+
+=btn-icon
+  +btn_basic
+  +btn_color($color-secondary, transparent)
+  +font(.875rem, 1.2rem)
+  font-weight: $font-weight-medium
+  border: none
+  border-bottom: 2px solid transparent
+
+  +hover_and_active
+    border-bottom: 2px solid $color-secondary
+
+=btn-rounded-black
+  +btn_basic
+  +font(1.2rem, 1.25rem)
+  height: 3.75rem
+  width: 3.75rem
+  color: $color-white
+  background: $color-black
+  box-shadow: 0 20px 20px 0 rgba(0,0,0,0.1)
+  text-align: center
+  transition: width .2s
+  border-radius: 100px
+  display: flex
+  align-items: center
+  justify-content: center
+
+=btn-rounded-white
+  +btn_basic
+  +font(1.2rem, 1.875rem)
+  height: 3.75rem
+  width: 3.75rem
+  color: $color-black
+  background: $color-white
+  box-shadow: 0 20px 20px 0 rgba(0,0,0,0.05)
+  text-align: center
+  transition: width .2s
+  border-radius: 100px
+  padding: 1.3rem 1.5rem 0.5rem 0.5rem
+
+=btn-back
+  &:before
+    content: '\2039'
+    padding-right: .5em
+
+=buttons
+  .btn-default-short
+    +btn-default-short
+
+  .btn-super-short
+    +btn-super-short
+
+  .btn-extra-short
+    +btn-extra-short
+
+  .btn-default-medium
+    +btn-default-medium
+
+  .btn-default-tall
+    +btn-default-tall
+
+  .btn-white
+    +btn-white
+
+  .btn-black
+    +btn-black
+
+  .btn-ghost
+    +btn-ghost
+
+  .btn-ghost-grey
+    +btn-ghost-grey
+
+  .btn-ghost-secondary
+    +btn-ghost-secondary
+
+  .btn-gradient
+    +btn-gradient
+
+  .btn-primary
+    +btn-primary
+
+  .btn-primary-dark
+    +btn-primary-dark
+
+  .btn-primary-light
+    +btn-primary-light
+
+  .btn-primary-outlined
+    +btn-outlined($btn-color-primary)
+
+  .btn-secondary
+    +btn-secondary
+
+  .btn-narrow
+    +btn-narrow
+
+  .btn-standard
+    +btn-standard
+
+  .btn-wide
+    +btn-wide
+
+  .btn-max
+    +btn-max
+
+  .btn-icon
+    +btn-icon
+
+  .btn-rounded-black
+    +btn-rounded-black
+
+  .btn-rounded-white
+    +btn-rounded-white
+
+  .btn-compact
+    +btn-compact
+
+  .btn-back
+    +btn-back
