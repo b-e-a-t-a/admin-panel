@@ -13,8 +13,8 @@ body
   padding: 0
   font-weight: $font-weight-normal
   font-family: $font-family-primary
-  color: $color-text
-  background: $color-bg
+  color: $color-black
+  background: $color-bg-light
   line-height: normal
   letter-spacing: .01em
 
@@ -157,3 +157,27 @@ input
 
 .vertical-scrollbar
   +vertical-scrollbar
+
+.page
+  +page
+
+.page-heading
+  +page-heading
+
+.page-subnav
+  +page-subnav
+
+.container
+  +container
+
+.card
+  +card
+
+  &+&
+    margin-top: 1.5rem
+
+  &.no-padding
+    padding: 0
+
+  +screen-xs
+    margin-top: 5rem

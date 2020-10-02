@@ -10,6 +10,8 @@ $navbar-h: 5rem
 
 $radius: 2px
 
+$gutter-width: 4rem
+
 // checkboxes mixins and animation 'settings'
 @keyframes tick
   0%
@@ -246,3 +248,26 @@ $radius: 2px
     background-color: $thumb-color
   &:-moz-scrollbar-thumb
     border-radius: 10px
+
+=clearfix
+  &:after
+    content: ""
+    display: table
+    clear: both
+
+=container($gutter: $gutter-width)
+  // max-width: 1440px
+  margin-right: auto
+  margin-left: auto
+  padding: 0 ($gutter / 2)
+
+  +screen-xs
+    padding: 0 ($gutter / 4)
+
+// Centered container element
+=container-fixed($gutter: $gutter-width)
+  margin-right: auto
+  margin-left: auto
+  padding-left: ($gutter / 2)
+  padding-right: ($gutter / 2)
+  @include clearfix
