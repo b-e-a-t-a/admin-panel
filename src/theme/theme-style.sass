@@ -140,17 +140,41 @@ input
     opacity: 0
     animation: slide-out .3s ease-in forwards
 
-@keyframes slide-in
-  from
-    transform: translateX(1rem)
-  to
-    transform: translateX(0)
+  @keyframes slide-in
+    from
+      transform: translateX(1rem)
+    to
+      transform: translateX(0)
 
-@keyframes slide-out
-  from
-    transform: translateX(0)
-  to
-    transform: translateX(1rem)
+  @keyframes slide-out
+    from
+      transform: translateX(0)
+    to
+      transform: translateX(1rem)
+.slideRightLeft
+  &-enter
+    opacity: 0
+
+  &-enter-active
+    transition: opacity .5s
+    animation: slide-in .5s forwards
+
+  &-leave-active
+    transition: opacity .3s
+    opacity: 0
+    animation: slide-out .3s ease-in forwards
+
+  @keyframes slide-in
+    from
+      transform: translateX(-2rem)
+    to
+      transform: translateX(0)
+
+  @keyframes slide-out
+    from
+      transform: translateX(0)
+    to
+      transform: translateX(-2rem)
 
 .horizontal-scrollbar
   +horizontal-scrollbar

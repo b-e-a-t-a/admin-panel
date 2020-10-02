@@ -14,3 +14,41 @@
   &__back
     float: right
     margin: 1.1rem 2rem
+
+  &__hamburger
+    display: flex
+    flex-direction: column
+    padding-right: 1rem
+    justify-content: center
+    align-items: flex-start
+    position: relative
+    top: 50%
+    left: $navbar-w + 3rem
+    transform: translate(-50%, -50%)
+    cursor: pointer
+    float: left
+
+    &-longerLine
+      height: 5px
+      width: 2rem
+      background: $color-primary
+      margin: .1rem 0
+
+    &-shorterLine
+      height: 5px
+      width: 1.5rem
+      background: $color-primary
+      margin: .15rem 0
+
+    &-menu
+      position: absolute
+      right: -8rem
+      z-index: 2
+      background: $color-white
+      border-radius: $radius
+
+    &-logout
+      cursor: pointer
+      display: flex
+      justify-content: center
+      align-items: center

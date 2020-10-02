@@ -113,3 +113,46 @@ $navbar-w-wider: 15rem
         display: inline-block
     &__navItem
       justify-content: flex-start
+
+  &__hamburger
+    display: none
+
+    +screen-xs
+      display: flex
+      flex-direction: column
+      margin-right: 1rem
+      margin-left: 1rem
+      justify-content: center
+      align-items: flex-start
+      position: relative
+      top: 50%
+      right: 0
+      transform: translate(0, -50%)
+      cursor: pointer
+      float: right
+
+    &-longerLine
+      height: 5px
+      width: 2rem
+      background: $color-primary
+      margin: .1rem 0
+
+    &-shorterLine
+      height: 5px
+      width: 1.5rem
+      background: $color-primary
+      margin: .15rem 0
+
+    &-menu
+      position: absolute
+      right: 4rem
+      z-index: 2
+      background: $color-white
+      border-radius: $radius
+
+    &-logout
+      padding: .7rem 1.5rem
+      cursor: pointer
+      display: flex
+      justify-content: center
+      align-items: center

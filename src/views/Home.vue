@@ -1,6 +1,6 @@
 <template>
   <div class="Home page">
-    <Navbar :is-back-button-visible="false" />
+    <Navbar />
     <div class="container">
       <Welcome />
     </div>
