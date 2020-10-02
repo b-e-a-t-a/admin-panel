@@ -1,0 +1,115 @@
+@import "~theme/common-style"
+
+$navbar-w-wider: 15rem
+
+.Navigation
+  width: $navbar-w
+  position: fixed
+  left: 0
+  top: 0
+  bottom: 0
+  overflow: hidden
+  z-index: 9998
+  transition: width .3s
+  background: $color-primary-dark
+  +screen-xs
+    background: $color-gradient
+    right: 0
+    height: $navbar-h
+    width: 100%
+    display: flex
+    justify-content: space-between
+
+  &__logo
+    background: $color-primary-super-light
+    display: block
+    transition: all .3s
+    padding: 1rem 0
+    +screen-xs
+      background: $color-primary-super-light
+      padding: 1.3rem
+    img
+      width: 2.5rem
+      margin: auto
+      display: block
+
+  &__nav
+    &Items
+      margin: 3rem 0
+      +screen-xs
+        display: flex
+        width: 80%
+        justify-content: space-around
+        margin: 0 auto
+    &Item
+      display: flex
+      justify-content: center
+      align-items: center
+      padding: 1rem 1.5rem
+      color: $color-primary-super-light
+      cursor: pointer
+      white-space: nowrap
+      transition: all .3s
+      +screen-xs
+        padding: .5rem
+      &:hover
+        opacity: 1
+        color: $color-secondary-hovered
+        .Navigation__navLabel, .Navigation__navIcon
+          opacity: 1
+          color: $color-secondary-hovered
+      &.active
+        opacity: 1
+        .Navigation__navLabel, .Navigation__navIcon
+          color: $color-white
+          opacity: 1
+        +screen-xs
+          background: none
+          .Navigation__navLabel, .Navigation__navIcon
+            background: $color-secondary-dark
+            color: $color-primary-super-light
+
+        &:hover
+          background: $color-primary-super-light
+          .Navigation__navLabel, .Navigation__navIcon
+            color: $color-secondary-dark
+          +screen-xs
+            background: none
+            .Navigation__navLabel, .Navigation__navIcon
+              background: $color-primary-dark
+              color: $color-primary-super-light
+
+    &Icon
+      +font(1.5rem)
+      display: flex
+      justify-content: center
+      align-items: center
+      opacity: 0.6
+
+      +screen-xs
+        background: $color-primary-dark
+        padding: 0.5rem 1rem
+        border-radius: 50%
+        +font(1rem)
+        height: 40px
+        min-width: 40px
+
+    &Label
+      +font(1.2rem)
+      +weight-medium
+      display: none
+      vertical-align: middle
+      margin-left: 1rem
+      color: $color-white
+      opacity: 0.6
+      transition: all .3s
+
+  &:hover
+    +screen-sm-plus
+      width: $navbar-w-wider
+  &:hover &
+    &__navLabel
+      +screen-sm-plus
+        display: inline-block
+    &__navItem
+      justify-content: flex-start
