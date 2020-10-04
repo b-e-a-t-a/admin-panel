@@ -1,0 +1,57 @@
+@import "~theme/common-style"
+
+.Table
+	+table
+	font-size: .9rem
+	&__head
+		th
+			border-top: 1px solid $color-secondary-dark
+			border-bottom: 1px solid $color-secondary-dark
+
+	&__heading
+		&.sortable
+			cursor: pointer
+
+		&-name
+			margin-right: .2rem
+		.fas
+      color: $color-bg-dark
+
+	&__row
+		&.selectable
+			cursor: pointer
+		&:hover,
+		&.active
+			&:not(.isRowSearchable)
+				background: $color-bg-light
+
+		&Actions
+			display: flex
+			// transition: opacity .3s, visibility .3s
+			button + button
+				margin-left: .5rem
+
+		&Action
+			display: flex
+			align-items: center
+			justify-content: space-between
+			// &:not(:last-child)
+			// 	margin-right: 1rem
+			&-tooltip
+				margin-left: 1rem
+				line-height: normal
+			&.disabled
+				cursor: disabled
+				pointer-events: none
+			&.hidden
+				visibility: hidden
+				pointer-events: none
+
+	&__cell
+		color: $color-black
+
+	&__checkbox
+		+checkbox
+		display: inline-block
+		vertical-align: middle
+		margin-right: 1rem
