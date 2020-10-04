@@ -9,7 +9,7 @@
 
 <script>
 // @ is an alias to /src
-import Welcome from "@/components/Welcome.vue";
+import Welcome from "@/home/Welcome.vue";
 import Navbar from "theme/Navbar/Navbar";
 
 export default {

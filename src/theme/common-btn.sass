@@ -244,17 +244,17 @@ $btn-color-gradient: $color-gradient
 
 =btn-primary-light
   +btn_basic
-  +btn_color($color-primary-light, $color-primary-light, $color-white)
-  border: 1px solid $color-primary-light
+  +btn_color($color-primary-light, $color-primary-light, $color-black)
+  border: 1px solid $color-black
 
   +hover_and_active
-    +btn_color($color-primary-light, $color-white, $color-primary-light)
+    +btn_color($color-primary-light, $color-black, $color-primary-light)
     border: 1px solid $color-primary-light
 
   +disabled
     opacity: .5
     +hover_and_active
-      +btn_color($color-primary-light, $color-primary-light, $color-white)
+      +btn_color($color-primary-light, $color-primary-light, $color-black)
 
 =btn-primary-dark
   +btn_basic
@@ -286,7 +286,7 @@ $btn-color-gradient: $color-gradient
 =btn-secondary-light
   +btn_basic
   +btn_color($color-secondary-light, $color-secondary-light, $color-black)
-  border: 1px solid $color-secondary-light
+  border: 1px solid $color-black
 
   +hover_and_active
     +btn_color($color-secondary-light, $color-white, $color-secondary-light)
