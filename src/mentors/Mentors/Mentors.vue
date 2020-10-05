@@ -12,31 +12,44 @@
             <span v-if="!mentors.length && state !== 'loading'">
               No mentors yet
             </span>
-            <Table
-              v-if="mentors.length"
-              :headings="headings"
-              :data="filteredMentors"
-              is-row-sortable
-              is-row-searchable
-              :queries="queries"
-              :actions="rowActions"
-              v-model:sort-by="sortBy"
-            >
-              <template v-slot:cell="{ data, heading }">
-                <span v-if="headings[heading].key == 'avatar'">
-                  <Avatar :user="data" isBordered />
-                </span>
-                <span v-else>
-                  {{ data[headings[heading].key] }}
-                </span>
-              </template>
-            </Table>
-            <div class="Mentors__noResults">
-              <h4 v-if="filteredMentors.length == 0 && state !== 'loading'">
-                No search results. Change search query and try again
-              </h4>
-            </div>
           </h3>
+          <Table
+            v-if="mentors.length"
+            :headings="headings"
+            :data="filteredMentors"
+            is-row-sortable
+            is-row-searchable
+            :queries="queries"
+            :actions="rowActions"
+            v-model:sort-by="sortBy"
+          >
+            <template v-slot:cell="{ data, heading }">
+              <span v-if="headings[heading].key == 'avatar'">
+                <Avatar :user="data" isBordered />
+              </span>
+              <span v-else>
+                {{ data[headings[heading].key] }}
+              </span>
+            </template>
+          </Table>
+          <div class="Mentors__noResults">
+            <h4 v-if="filteredMentors.length == 0 && state !== 'loading'">
+              No search results. Change search query and try again
+            </h4>
+          </div>
+          <Modal v-if="modalState != 'hidden'" @close="closeModal">
+            <template v-slot:header>Delete mentor</template>
+            <template v-slot:content>
+              <Confirm
+                :confirm-question="
+                  `Do you really want to delete mentor: ${selectedMentor.fullname} ?`
+                "
+                :button-text="'Yes'"
+                @accept="deleteMentor(selectedMentor.id)"
+                @close="modalState = 'hidden'"
+              />
+            </template>
+          </Modal>
         </div>
       </div>
     </div>
@@ -48,7 +61,9 @@ import Navbar from "theme/Navbar/Navbar";
 import Loader from "theme/Loader";
 import Table from "theme/Table";
 import Avatar from "theme/Avatar";
-import { fetchMentors } from "../requests.js";
+import Modal from "theme/Modal";
+import Confirm from "theme/Confirm";
+import { fetchMentors, removeMentor } from "../requests.js";
 
 export default {
   name: "Mentors",
@@ -56,12 +71,15 @@ export default {
     Navbar,
     Loader,
     Table,
-    Avatar
+    Avatar,
+    Modal,
+    Confirm
   },
   data() {
     return {
       state: null,
       error: null,
+      modalState: "hidden",
       mentors: [],
       queryName: "",
       querySurname: "",
@@ -69,6 +87,7 @@ export default {
       queryEmail: "",
       queryPhone: "",
       queryCompany: "",
+      selectedMentor: {},
       headings: [
         {
           key: "avatar",
@@ -131,7 +150,7 @@ export default {
           name: "delete",
           icon: "far fa-trash-alt",
           class: "btn-secondary-dark",
-          fn: d => this.$router.push(`/mentors/${d.id}`)
+          fn: d => this.openModal(d)
         }
       ],
       queries: [
@@ -278,6 +297,23 @@ export default {
         .catch(error => {
           this.state = "error";
           console.log("error", error);
+        });
+    },
+    closeModal() {
+      this.modalState = "hidden";
+    },
+    openModal(user) {
+      this.modalState = "visible";
+      this.selectedMentor = user;
+    },
+    deleteMentor() {
+      removeMentor(this.selectedMentor.id)
+        .then((res) => {
+          console.log('res', res);
+          this.modalState = "hidden";
+        })
+        .catch( error => {
+          console.log('error', error)
         });
     }
   }

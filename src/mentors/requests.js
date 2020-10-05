@@ -9,3 +9,7 @@ export const fetchMentor = mentorId => {
     return response;
   });
 };
+
+export const removeMentor = mentorId => {
+  return axios.delete(`https://reqres.in/api/users/${mentorId}`);
+};
