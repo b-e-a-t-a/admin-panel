@@ -44,17 +44,20 @@
         </tr>
       </thead>
       <tbody class="">
-        <tr
-          v-if="isRowSearchable"
-          class="Table__row isRowSearchable"
-          :class="{}"
-        >
+        <tr v-if="isRowSearchable" class="Table__row isRowSearchable">
           <td
             v-for="(q, key) in queries"
             :key="'query-' + key"
             class="Table__cell"
             :class="[`_${key}`]"
-          ></td>
+          >
+            <search
+              v-if="q.searchable"
+              v-model:searchText="q.searchText"
+              :placeholder="q.placeholder"
+              :maxlen="q.maxlen"
+            />
+          </td>
         </tr>
         <tr
           v-for="(d, i) in data"
@@ -112,7 +115,7 @@
                       (action.name == 'delete' || action.name == 'edit') &&
                       d.deletedAt
                   },
-                  { hidden: d.isActive == 'nie' && action.name == 'unlock' }
+                  { hidden: d.isActive == 'no' && action.name == 'unlock' }
                 ]"
                 @click.stop="action.fn && action.fn(d)"
               >
@@ -130,8 +133,13 @@
 </template>
 
 <script>
+import Search from "theme/Search";
+
 export default {
   name: "Table",
+  components: {
+    Search
+  },
   props: {
     className: Object,
     theme: String,
@@ -185,11 +193,6 @@ export default {
     },
     placeholder: String,
     maxlen: Number
-  },
-  data() {
-    return {
-      isFixedHeaderVisible: false
-    }
   },
   computed: {
     firstColumn() {

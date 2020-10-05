@@ -7,20 +7,20 @@
         <div class="Mentors__header">
           <h2>Mentors list</h2>
         </div>
-        <div class="Therapists__content">
-          <h3 class="Therapists__contentHeader">
+        <div class="Mentors__content">
+          <h3 class="Mentors__contentHeader">
             <span v-if="!mentors.length && state !== 'loading'">
-              No mentors
+              No mentors yet
             </span>
             <Table
               v-if="mentors.length"
               :headings="headings"
-              :data="sortedMentors"
+              :data="filteredMentors"
               is-row-sortable
               is-row-searchable
               :queries="queries"
-              :sort-by="sortBy"
               :actions="rowActions"
+              v-model:sort-by="sortBy"
             >
               <template v-slot:cell="{ data, heading }">
                 <span v-if="headings[heading].key == 'avatar'">
@@ -31,6 +31,11 @@
                 </span>
               </template>
             </Table>
+            <div class="Mentors__noResults">
+              <h4 v-if="filteredMentors.length == 0 && state !== 'loading'">
+                No search results. Change search query and try again
+              </h4>
+            </div>
           </h3>
         </div>
       </div>
@@ -58,7 +63,12 @@ export default {
       state: null,
       error: null,
       mentors: [],
-      info: null,
+      queryName: "",
+      querySurname: "",
+      queryFullname: "",
+      queryEmail: "",
+      queryPhone: "",
+      queryCompany: "",
       headings: [
         {
           key: "avatar",
@@ -119,9 +129,59 @@ export default {
         },
         {
           name: "delete",
-          icon: "fas fa-trash",
+          icon: "far fa-trash-alt",
           class: "btn-secondary-dark",
           fn: d => this.$router.push(`/mentors/${d.id}`)
+        }
+      ],
+      queries: [
+        {
+          key: "avatar",
+          searchable: false
+        },
+        {
+          key: "id",
+          searchable: false
+        },
+        {
+          key: "first_name",
+          searchText: this.queryName,
+          placeholder: "search name",
+          searchable: true
+        },
+        {
+          key: "last_name",
+          searchText: this.querySurname,
+          placeholder: "search surname",
+          searchable: true
+        },
+        {
+          key: "fullname",
+          searchText: this.queryFullname,
+          placeholder: "search fullname",
+          searchable: true
+        },
+        {
+          key: "email",
+          searchText: this.queryEmail,
+          placeholder: "search email",
+          searchable: true
+        },
+        {
+          key: "phone",
+          searchText: this.queryPhone,
+          placeholder: "search phone no",
+          searchable: true
+        },
+        {
+          key: "company",
+          searchText: this.queryCompany,
+          placeholder: "search company",
+          searchable: true
+        },
+        {
+          key: "actions",
+          searchable: false
         }
       ]
     };
@@ -141,7 +201,7 @@ export default {
           case "email":
             return a.email.localeCompare(b.email);
           case "phone":
-            return a.phone.trim().localeCompare(b.phone.trim());
+            return a.phone - b.phone;
           case "company":
             return a.company.trim().localeCompare(b.company.trim());
           default:
@@ -152,6 +212,48 @@ export default {
       else if (this.sortBy.direction == "desc")
         return mentors.slice().reverse();
       return this.mentors;
+    },
+    filteredMentors() {
+      let filteredMentors;
+      const sName = this.queries.find(q => q.key == "first_name").searchText || "";
+      const sSurname = this.queries.find(q => q.key == "last_name").searchText || "";
+      const sFullname = this.queries.find(q => q.key == "fullname").searchText || "";
+      const sEmail = this.queries.find(q => q.key == "email").searchText || "";
+      const sPhone = this.queries.find(q => q.key == "phone").searchText || "";
+      const sCompany = this.queries.find(q => q.key == "company").searchText || "";
+
+      const anySearch = sName || sSurname || sFullname || sEmail || sPhone || sCompany;
+
+      if (anySearch)
+        filteredMentors = this.sortedMentors
+          .filter(
+            s =>
+              s.first_name &&
+              s.first_name.toLowerCase().indexOf(sName.toLowerCase()) !== -1
+          )
+          .filter(
+            s =>
+              s.last_name &&
+              s.last_name.toLowerCase().indexOf(sSurname.toLowerCase()) !== -1
+          )
+          .filter(
+            u =>
+              u.fullname &&
+              u.fullname.toLowerCase().indexOf(sFullname.toLowerCase()) !== -1
+          )
+          .filter(
+            u =>
+              u.email &&
+              u.email.toLowerCase().indexOf(sEmail.toLowerCase()) !== -1
+          )
+          .filter(u => u.phone && u.phone.indexOf(sPhone) !== -1)
+          .filter(
+            u =>
+              u.company &&
+              u.company.toLowerCase().indexOf(sCompany.toLowerCase()) !== -1
+          );
+      else filteredMentors = this.sortedMentors;
+      return filteredMentors;
     }
   },
   mounted() {
@@ -168,7 +270,7 @@ export default {
             company: companyData.company,
             companyUrl: companyData.url,
             aboutMe: companyData.text,
-            phone: Math.floor(Math.random() * 1000000000, 0),
+            phone: Math.floor(100000000 + Math.random() * 900000000).toString(),
             fullname: mentor.first_name + " " + mentor.last_name
           }));
           this.state = "loaded";

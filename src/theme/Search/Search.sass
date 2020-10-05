@@ -1,0 +1,32 @@
+@import "~theme/common-style"
+
+.Search
+  display: inline-block
+  position: relative
+  border: 1px solid $color-secondary-super-light
+  background: $color-gradient-light
+  padding: .1rem
+  padding-left: 0
+
+  input
+    border: none
+    padding-right: 1rem
+    width: 100%
+    font-size: .8rem
+    background: $color-gradient-light
+    &::placeholder
+      font-style: italic
+    &:focus
+      outline: none
+
+  &-text
+    vertical-align: center
+
+  &-icon
+    position: absolute
+    top: 50%
+    left: 95%
+    transform: translate(-80%, -45%)
+    cursor: pointer
+    padding: .1rem
+    vertical-align: center

@@ -9,13 +9,13 @@
 			border-bottom: 1px solid $color-secondary-dark
 
 	&__heading
-		&.sortable
+		&.isRowSortable
 			cursor: pointer
 
 		&-name
 			margin-right: .2rem
-		.fas
-      color: $color-bg-dark
+		i
+      color: $color-primary
 
 	&__row
 		&.selectable
@@ -27,7 +27,7 @@
 
 		&Actions
 			display: flex
-			// transition: opacity .3s, visibility .3s
+			transition: opacity .3s, visibility .3s
 			button + button
 				margin-left: .5rem
 
@@ -38,7 +38,7 @@
 			// &:not(:last-child)
 			// 	margin-right: 1rem
 			&-tooltip
-				margin-left: 1rem
+				margin-left: .5rem
 				line-height: normal
 			&.disabled
 				cursor: disabled
@@ -55,3 +55,6 @@
 		display: inline-block
 		vertical-align: middle
 		margin-right: 1rem
+
+	._id
+		width: 5%
