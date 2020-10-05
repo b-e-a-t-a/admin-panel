@@ -1,0 +1,32 @@
+@import "~theme/common-style"
+
+.Toast
+  position: fixed
+  bottom: 0
+  left: 0
+  right: 0
+  background: $color-primary-light
+  padding: 2.5rem 0
+  transition: all .3s
+  z-index: 10000
+  &__container
+    display: flex
+    justify-content: space-between
+    align-items: center
+  span
+    color: $color-black
+    font-size: 1.5rem
+  button
+    border: none
+    position: absolute
+    top: .8rem
+    right: .8rem
+    &:hover, &:active
+      border: none
+      span
+        color: $color-secondary-dark
+
+  &-enter-active,
+  &-leave-to
+    opacity: 0
+    transform: translateY(100%)

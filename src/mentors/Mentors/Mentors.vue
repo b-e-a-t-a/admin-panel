@@ -9,7 +9,10 @@
         </div>
         <div class="Mentors__content">
           <h3 class="Mentors__contentHeader">
-            <span v-if="!mentors.length && state !== 'loading'">
+            <span
+              v-if="!mentors.length && state !== 'loading'"
+              class="noResults"
+            >
               No mentors yet
             </span>
           </h3>
@@ -32,12 +35,21 @@
               </span>
             </template>
           </Table>
-          <div class="Mentors__noResults">
-            <h4 v-if="filteredMentors.length == 0 && state !== 'loading'">
+          <div class="noResults">
+            <h4
+              v-if="
+                mentors.length &&
+                  filteredMentors.length == 0 &&
+                  state !== 'loading'
+              "
+            >
               No search results. Change search query and try again
             </h4>
           </div>
           <Modal v-if="modalState != 'hidden'" @close="closeModal">
+            <template v-if="modalState == 'loading'" v-slot:loader>
+              <loader class="sectionOnly" />
+            </template>
             <template v-slot:header>Delete mentor</template>
             <template v-slot:content>
               <Confirm
@@ -50,6 +62,21 @@
               />
             </template>
           </Modal>
+          <Toast
+            v-if="toastState == 'removed'"
+            title="Mentor has been removed !"
+            @close="toastState = 'hidden'"
+          />
+          <Toast
+            v-if="toastState == 'error'"
+            title="Something went wrong! Please try again"
+            @close="toastState = 'hidden'"
+          />
+          <Toast
+            v-if="toastState == 'errorMessage'"
+            :title="error.error"
+            @close="toastState = 'hidden'"
+          />
         </div>
       </div>
     </div>
@@ -63,6 +90,7 @@ import Table from "theme/Table";
 import Avatar from "theme/Avatar";
 import Modal from "theme/Modal";
 import Confirm from "theme/Confirm";
+import Toast from "theme/Toast";
 import { fetchMentors, removeMentor } from "../requests.js";
 
 export default {
@@ -73,7 +101,8 @@ export default {
     Table,
     Avatar,
     Modal,
-    Confirm
+    Confirm,
+    Toast
   },
   data() {
     return {
@@ -88,6 +117,7 @@ export default {
       queryPhone: "",
       queryCompany: "",
       selectedMentor: {},
+      toastState: "hidden",
       headings: [
         {
           key: "avatar",
@@ -307,13 +337,23 @@ export default {
       this.selectedMentor = user;
     },
     deleteMentor() {
+      this.modalState = "loading";
       removeMentor(this.selectedMentor.id)
-        .then((res) => {
-          console.log('res', res);
+        .then(() => {
           this.modalState = "hidden";
+          this.toastState = "removed";
+          this.mentors = this.mentors.filter(
+            mentor => mentor.id !== this.selectedMentor.id
+          );
         })
-        .catch( error => {
-          console.log('error', error)
+        .catch(error => {
+          this.error = error;
+          this.modalState = "hidden";
+          if (this.error.error) {
+            this.toastState = "errorMessage";
+          } else {
+            this.toastState = "error";
+          }
         });
     }
   }
