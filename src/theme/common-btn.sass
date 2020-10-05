@@ -1,7 +1,7 @@
 @import "common-colors"
 @import "common-fonts"
 
-$radius: 2px
+$b-radius: 5px
 
 $btn-color-primary: $color-primary
 $btn-color-primary-hovered: darken($color-primary, 10%)
@@ -47,17 +47,17 @@ $btn-color-gradient: $color-gradient
   background: linear-gradient($color-white,$color-white) padding-box, $color-gradient-dark border-box
   border: 1px solid transparent
 
-=gradient-border-whiteBg($b-radius: $radius)
+=gradient-border-whiteBg($b-radius: $b-radius)
   background: linear-gradient($color-white,$color-white) padding-box, $color-gradient border-box
   border: 1px solid transparent
   border-radius: $b-radius
 
-=gradient-border-greyBg($b-radius: $radius)
+=gradient-border-greyBg($b-radius: $b-radius)
   background: linear-gradient($color-bg-light,$color-bg-light) padding-box, $color-gradient-dark border-box
   border: 1px solid transparent
   border-radius: $b-radius
 
-=gradient-border($b-radius: $radius)
+=gradient-border($b-radius: $b-radius)
   background: $color-gradient padding-box, $color-gradient border-box
   border: 2px solid transparent
   border-radius: $b-radius
@@ -112,7 +112,7 @@ $btn-color-gradient: $color-gradient
   outline: none
   padding: 0
   cursor: pointer
-  border-radius: $radius
+  border-radius: $b-radius
   transition: background .3s, color .3s, font-weight .3s, border-color .3s
   .fa-spinner,
   .fa-check,

@@ -1,0 +1,58 @@
+@import "~theme/common-style"
+
+.Avatar
+  width: 3.5rem
+  height: 3.5rem
+  display: flex
+  align-items: center
+
+  +screen-lg-minus
+    width: 3.4rem
+    height: 3.4rem
+
+  &__wrapper
+    display: flex
+    justify-content: center
+    align-items: center
+    margin: 0 auto
+
+  .bordered
+    +gradient-border-blackBg
+    width: 3.5rem
+    height: 3.5rem
+    border-radius: 50%
+    z-index: 1
+    +screen-lg-minus
+      width: 3.4rem
+      height: 3.4rem
+
+  .backgrounded
+    width: 3rem
+    height: 3rem
+    background: $color-gradient
+    border-radius: 50%
+
+  &__own
+    height: 3rem
+    width: 3rem
+    border-radius: 50%
+    background-position: center
+    background-size: cover
+    background-repeat: no-repeat
+
+  &__default
+    height: 3rem
+    width: 3rem
+
+  &__initials
+    height: 3rem
+    width: 3rem
+    display: flex
+    justify-content: center
+    align-items: center
+    border-radius: 50%
+    line-height: .9rem
+    background: $color-gradient
+    color: $color-white
+    z-index: 2
+    +weight-semibold

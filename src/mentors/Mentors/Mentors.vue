@@ -24,11 +24,7 @@
             >
               <template v-slot:cell="{ data, heading }">
                 <span v-if="headings[heading].key == 'avatar'">
-                  <img
-                    :src="data[headings[heading].key]"
-                    alt="newsfeed image"
-                    class="newsfeedImg"
-                  />
+                  <Avatar :user="data" isBordered />
                 </span>
                 <span v-else>
                   {{ data[headings[heading].key] }}
@@ -46,6 +42,7 @@
 import Navbar from "theme/Navbar/Navbar";
 import Loader from "theme/Loader";
 import Table from "theme/Table";
+import Avatar from "theme/Avatar";
 import { fetchMentors } from "../requests.js";
 
 export default {
@@ -53,7 +50,8 @@ export default {
   components: {
     Navbar,
     Loader,
-    Table
+    Table,
+    Avatar
   },
   data() {
     return {
