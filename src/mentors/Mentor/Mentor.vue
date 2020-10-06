@@ -23,12 +23,10 @@
                   <textarea
                     v-if="item.value == 'aboutMe'"
                     v-model="item[item.value]"
-                    :name="`${item.value}`"
-                    :class="`${item.value}`"
-                    @keyup.enter="
-                      changeData(`${item[value]}`, item[item.value])
-                    "
-                    @keyup.esc="finishEdition(`${item[value]}`)"
+                    name="aboutMe"
+                    class="aboutMe"
+                    @keyup.enter="changeData('aboutMe', item[item.value])"
+                    @keyup.esc="finishEdition('aboutMe')"
                   />
                   <input
                     v-else
@@ -36,7 +34,9 @@
                     type="text"
                     :name="`${item.value}`"
                     :class="`${item.value}`"
-                    @keyup.enter="changeData(`${item.value}`, item[item.value])"
+                    @keyup.enter="
+                      validateData(`${item.value}`, item[item.value])
+                    "
                     @keyup.esc="finishEdition(`${item.value}`)"
                   />
                 </div>
@@ -47,7 +47,7 @@
                 <div v-else class="actions whileEdited">
                   <button
                     class="btn-ghost-primary btn-default-short btn-standard"
-                    @click="changeData(`${item.value}`, item[item.value])"
+                    @click="validateData(`${item.value}`, item[item.value])"
                   >
                     Save
                   </button>
@@ -60,42 +60,7 @@
                 </div>
               </div>
             </div>
-            <!-- <div class="Mentor__item">
-              <div class="key" :class="{ beingEdited: edition.first_name }">
-                Name
-              </div>
 
-              <div v-if="!edition.first_name" class="value">
-                {{ mentor.first_name || "no data" }}
-              </div>
-              <div v-else class="value">
-                <input
-                  v-model="first_name"
-                  name="first_name"
-                  class="name"
-                  @keyup.enter="changeData('first_name', first_name)"
-                  @keyup.esc="finishEdition('first_name')"
-                />
-              </div>
-
-              <div v-if="!edition.first_name" class="actions">
-                <i class="fas fa-user-edit" @click="edit('first_name')" />
-              </div>
-              <div v-else class="actions whileEdited">
-                <button
-                  class="btn-ghost-primary btn-default-short btn-standard"
-                  @click="changeData('first_name', first_name)"
-                >
-                  Save
-                </button>
-                <button
-                  class="btn-gradient-brown btn-default-short btn-standard"
-                  @click="finishEdition('first_name')"
-                >
-                  Cancel
-                </button>
-              </div>
-            </div> -->
             <h4>Company data</h4>
             <div :key="item.id" v-for="item in companyItems">
               <div class="Mentor__item">
@@ -146,12 +111,26 @@
       />
       <Toast
         v-if="toastState == 'error'"
+        error
         title="Something went wrong! Please try again"
         @close="toastState = 'hidden'"
       />
       <Toast
         v-if="toastState == 'errorMessage'"
+        error
         :title="error.error"
+        @close="toastState = 'hidden'"
+      />
+      <Toast
+        v-if="toastState == 'emailError'"
+        error
+        title="Email format is invalid. Check your data and try again."
+        @close="toastState = 'hidden'"
+      />
+      <Toast
+        v-if="toastState == 'phoneError'"
+        error
+        title="Phone number is invalid. Check your data and try again."
         @close="toastState = 'hidden'"
       />
     </div>
@@ -256,6 +235,28 @@ export default {
           this.state = "error";
         });
     },
+    checkIfEmailValid(key, val) {
+      const re = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+      const isValid = re.test(String(val).toLowerCase());
+      if (!isValid) {
+        this.toastState = "emailError";
+      } else {
+        this.changeData(key, val);
+      }
+    },
+    checkIfPhoneNumberValid(key, val) {
+      const isValid = /^\d{9}$/.test(val);
+      if (!isValid) {
+        this.toastState = "phoneError";
+      } else {
+        this.changeData(key, val);
+      }
+    },
+    validateData(key, val) {
+      if (key == "email") this.checkIfEmailValid(key, val);
+      else if (key == "phone") this.checkIfPhoneNumberValid(key, val);
+      else this.changeData(key, val);
+    },
     changeData(key, val) {
       this.edition[key] = false;
       let mentorObject = Object.assign({}, this.mentor);
@@ -283,6 +284,7 @@ export default {
     finishEdition(key) {
       this.edition[key] = false;
       this.setEditables(key);
+      this.toastState = "hidden";
     },
     setEditables(key) {
       this[key] = this.mentor[key];

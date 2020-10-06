@@ -1,8 +1,11 @@
 <template>
   <transition name="Toast" appear>
-    <div class="Toast">
+    <div class="Toast" :class="{ error: error }">
       <div class="container Toast__container">
-        <h3 v-if="title">{{ title }}</h3>
+        <h3 v-if="title">
+          <i v-if="error" class="fas fa-exclamation-triangle"></i>
+          {{ title }}
+        </h3>
         <div class="Toast__content">
           <slot name="content" />
         </div>
@@ -21,7 +24,8 @@ export default {
   name: "Toast",
   props: {
     title: String,
-    close: Function
+    close: Function,
+    error: Boolean
   },
   mounted() {
     setTimeout(() => this.$emit("close"), 5000);

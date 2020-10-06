@@ -69,11 +69,13 @@
           />
           <Toast
             v-if="toastState == 'error'"
+            error
             title="Something went wrong! Please try again"
             @close="toastState = 'hidden'"
           />
           <Toast
             v-if="toastState == 'errorMessage'"
+            error
             :title="error.error"
             @close="toastState = 'hidden'"
           />
