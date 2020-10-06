@@ -8,6 +8,11 @@
     h4
       color: $color-primary
       text-align: left
+      padding-bottom: .5rem
+      border-bottom: 1px double red
+      border-bottom: double
+      &:not(:first-child)
+        margin-top: 3rem
 
   &__content
     line-height: 20px
@@ -47,7 +52,7 @@
     grid-template-columns: repeat(8, 1fr)
     grid-gap: 2rem
     padding: 2rem 0
-    border-bottom: solid 1px black
+    border-bottom: solid 1px $color-secondary-super-light
 
     &.beingEdited
       padding: 0
@@ -60,11 +65,10 @@
     .key
       grid-area: auto / auto / span 1 / span 2
       color: black
-      &.h4
-        color: $color-primary
 
     .value
       grid-area: auto / auto / span 1 / span 4
+      text-align: left
       &.centered
         height: 50%
         align-self: center

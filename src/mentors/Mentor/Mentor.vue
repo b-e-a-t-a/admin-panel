@@ -10,7 +10,57 @@
         <div class="Mentor__details p">
           <form @submit.prevent>
             <h4>Personal data</h4>
-            <div class="Mentor__item">
+            <div :key="item.id" v-for="item in items">
+              <div class="Mentor__item">
+                <div class="key" :class="{ beingEdited: edition[item.value] }">
+                  {{ item.label }}
+                </div>
+
+                <div v-if="!edition[item.value]" class="value">
+                  {{ mentor[item.value] || "no data" }}
+                </div>
+                <div v-else class="value">
+                  <textarea
+                    v-if="item.value == 'aboutMe'"
+                    v-model="item[item.value]"
+                    :name="`${item.value}`"
+                    :class="`${item.value}`"
+                    @keyup.enter="
+                      changeData(`${item[value]}`, item[item.value])
+                    "
+                    @keyup.esc="finishEdition(`${item[value]}`)"
+                  />
+                  <input
+                    v-else
+                    v-model="item[item.value]"
+                    type="text"
+                    :name="`${item.value}`"
+                    :class="`${item.value}`"
+                    @keyup.enter="changeData(`${item.value}`, item[item.value])"
+                    @keyup.esc="finishEdition(`${item.value}`)"
+                  />
+                </div>
+
+                <div v-if="!edition[item.value]" class="actions">
+                  <i class="fas fa-user-edit" @click="edit(`${item.value}`)" />
+                </div>
+                <div v-else class="actions whileEdited">
+                  <button
+                    class="btn-ghost-primary btn-default-short btn-standard"
+                    @click="changeData(`${item.value}`, item[item.value])"
+                  >
+                    Save
+                  </button>
+                  <button
+                    class="btn-gradient-brown btn-default-short btn-standard"
+                    @click="finishEdition(`${item.value}`)"
+                  >
+                    Cancel
+                  </button>
+                </div>
+              </div>
+            </div>
+            <!-- <div class="Mentor__item">
               <div class="key" :class="{ beingEdited: edition.first_name }">
                 Name
               </div>
@@ -44,6 +94,46 @@
                 >
                   Cancel
                 </button>
+              </div>
+            </div> -->
+            <h4>Company data</h4>
+            <div :key="item.id" v-for="item in companyItems">
+              <div class="Mentor__item">
+                <div class="key" :class="{ beingEdited: edition[item.value] }">
+                  {{ item.label }}
+                </div>
+
+                <div v-if="!edition[item.value]" class="value">
+                  {{ mentor[item.value] || "no data" }}
+                </div>
+                <div v-else class="value">
+                  <input
+                    v-model="item[item.value]"
+                    type="text"
+                    :name="`${item.value}`"
+                    :class="`${item.value}`"
+                    @keyup.enter="changeData(`${item.value}`, item[item.value])"
+                    @keyup.esc="finishEdition(`${item.value}`)"
+                  />
+                </div>
+
+                <div v-if="!edition[item.value]" class="actions">
+                  <i class="fas fa-user-edit" @click="edit(`${item.value}`)" />
+                </div>
+                <div v-else class="actions whileEdited">
+                  <button
+                    class="btn-ghost-primary btn-default-short btn-standard"
+                    @click="changeData(`${item.value}`, item[item.value])"
+                  >
+                    Save
+                  </button>
+                  <button
+                    class="btn-gradient-brown btn-default-short btn-standard"
+                    @click="finishEdition(`${item.value}`)"
+                  >
+                    Cancel
+                  </button>
+                </div>
               </div>
             </div>
           </form>
@@ -89,12 +179,55 @@ export default {
       mentor: {},
       toastState: "hidden",
       first_name: "",
-      items: ["first_name", "last_name", "email"],
+      last_name: "",
+      email: "",
+      phone: "",
+      aboutMe: "",
+      company: "",
+      companyUrl: "",
       edition: {
         first_name: false,
         last_name: false,
-        email: false
-      }
+        email: false,
+        phone: false,
+        aboutMe: false,
+        company: false,
+        companyUrl: false
+      },
+      items: [
+        {
+          label: "Name",
+          value: "first_name",
+          first_name: ""
+        },
+        {
+          label: "Surname",
+          value: "last_name"
+        },
+        {
+          label: "Email",
+          value: "email"
+        },
+        {
+          label: "Phone",
+          value: "phone"
+        },
+        {
+          label: "About me",
+          value: "aboutMe"
+        }
+      ],
+      companyItems: [
+        {
+          label: "Company name",
+          value: "company",
+          company: ""
+        },
+        {
+          label: "Company www",
+          value: "companyUrl"
+        }
+      ]
     };
   },
   mounted() {
@@ -157,6 +290,16 @@ export default {
     edit(el) {
       this.edition[el] = true;
       this.first_name = this.mentor.first_name;
+      this.last_name = this.mentor.last_name;
+      this.email = this.mentor.email;
+      this.phone = this.mentor.phone;
+      this.aboutMe = this.mentor.aboutMe;
+      this.company = this.mentor.company;
+      this.companyUrl = this.mentor.companyUrl;
+      const personalItem = this.items.find(item => item.value == el);
+      const companyItem = this.companyItems.find(i => i.value == el);
+      const item = personalItem || companyItem;
+      item[el] = this.mentor[el];
     }
   }
 };
