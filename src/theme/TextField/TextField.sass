@@ -1,0 +1,40 @@
+@import "~theme/common-style"
+
+.TextField
+  &__field
+    +form-group
+
+    &.block
+      +form-group-block
+
+    &.readOnly
+      opacity: .5
+      pointer-events: none
+
+    &Error
+      +input-error
+
+    &Img
+      +form-img
+
+    input:focus,
+    textarea:focus
+      +gradient-border-greyBg
+      border-radius: 5px
+
+    input ~ &Img
+      margin-left: 2rem
+
+      +screen-xs
+        margin-left: auto
+        margin-top: 2rem
+
+    label
+      text-align: right
+
+  &__info
+    text-align: left
+    padding-left: .8rem
+    .checkbox
+      width: auto
+      height: auto

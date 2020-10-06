@@ -4,6 +4,24 @@
   &__header
     margin-bottom: 2rem
 
+  &__options
+    display: flex
+    align-items: center
+    justify-content: flex-end
+    margin: 2rem 0
+    button
+      float: right
+
   .noResults
     margin-top: 2rem
     color: $color-danger
+
+  &__form
+    &Info
+      margin-top: 3rem
+      text-align: left
+      +p-s
+    &Btns
+      +modal-buttons
+    .error
+      color: $color-danger

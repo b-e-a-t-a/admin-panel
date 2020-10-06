@@ -4,25 +4,36 @@
 
 $input-padding: 0 .7rem
 $input-width: 340px
+$b-radius: 5px
 
 =form-group
   display: flex
-  align-items: baseline
+  align-items: center
   position: relative
   transition: opacity .3s
+  input, textarea
+    +input
+
+  textarea
+    min-width: 300px
+    height: 3rem
+    padding: .5rem
+    line-height: 1.5rem
+    text-indent: 0
+    color: $color-secondary-super-dark
 
   +screen-xs
     +form-group-block
 
   label
-    padding-right: .8rem
+    padding-right: 1rem
   &~&
     margin-top: 1.8rem
 
   &.disabled
     opacity: .4
 
-  &~h4,
+  &~h4
     margin-top: 3rem !important
 
 =form-group-block
@@ -64,7 +75,8 @@ $input-width: 340px
   padding: $input-padding
   width: 100%
   color: $color-icon
-  border: 1px solid $color-bg-light
+  border: 1px solid $color-secondary-super-light
+  border-radius: $b-radius
   box-shadow: none
   background-color: $color-white
   height: 3rem
@@ -73,12 +85,11 @@ $input-width: 340px
 
   &:focus
     +gradient-border-greyBg
-    border-radius: 5px
+    border-radius: $b-radius
 
   &.err,
   &.has-value.err
-    border-bottom: 1px solid $color-danger
-    border-radius: 5px
+    color: $color-danger
 
   &.disabled
     background: $color-bg-light
@@ -99,7 +110,7 @@ $input-width: 340px
     +input
     flex: 1 1 60%
     letter-spacing: inherit
-    border-radius: 5px
+    border-radius: $b-radius
 
   textarea
     height: 7rem
@@ -146,7 +157,7 @@ $input-width: 340px
   justify-content: center
   align-items: center
   color: $color-border
-  border-radius: 3px
+  border-radius: $b-radius
 
   span
     +font(3em)
@@ -180,7 +191,7 @@ $input-width: 340px
   .check
     display: inline-block
     border: 1px solid $color-bg-dark
-    border-radius: 4px
+    border-radius: $b-radius
     transition: border-color .3s
     cursor: pointer
     position: relative
@@ -226,7 +237,7 @@ $input-width: 340px
     width: 24px
     background-color: $color-white
     border: 2px solid $color-btn-disabled
-    border-radius: 4px
+    border-radius: $b-radius
     transition: border-color .3s
     cursor: pointer
 
@@ -240,7 +251,7 @@ $input-width: 340px
   .checked
     &.check
       +gradient-border-whiteBg
-      border-radius: 4px
+      border-radius: $b-radius
       &:after
         display: inline-block
         left: 7px
@@ -266,25 +277,9 @@ $input-width: 340px
   border-color: $color-danger
   margin-bottom: 1rem
 
-=btn-add
-  +btn-primary
-  margin-top: 2rem
-  display: block
-
-  &:first-child
-    margin-top: 0
-
-=btn-remove
-  +btn_basic
-  display: inline-block
-  background: $color-danger
-  border: none
-  color: $color-white
-
 =modal-buttons
   +flexContainer('space-between')
   margin-top: 3rem
   button
     min-width: 30%
-    margin: 0 1rem
     text-transform: uppercase

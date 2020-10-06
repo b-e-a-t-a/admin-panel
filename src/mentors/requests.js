@@ -15,3 +15,7 @@ export const removeMentor = mentorId => {
 export const updateMentorData = (mentorId, data) => {
   return axios.put(`https://reqres.in/api/users/${mentorId}`, { data });
 };
+
+export const createMentor = data => {
+  return axios.post("https://reqres.in/api/users/", { data });
+};

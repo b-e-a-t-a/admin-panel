@@ -7,6 +7,15 @@
         <div class="Mentors__header">
           <h2>Mentors list</h2>
         </div>
+        <div class="Mentors__options">
+          <button
+            class="btn-standard btn-default-medium btn-gradient-dark"
+            @click="() => openModal('addMentor', {})"
+          >
+            <i class="fas fa-user-plus"></i>
+            Add mentor
+          </button>
+        </div>
         <div class="Mentors__content">
           <h3 class="Mentors__contentHeader">
             <span
@@ -50,8 +59,8 @@
             <template v-if="modalState == 'loading'" v-slot:loader>
               <loader class="sectionOnly" />
             </template>
-            <template v-slot:header>Delete mentor</template>
-            <template v-slot:content>
+            <template v-slot:header>{{ modalTitle }}</template>
+            <template v-if="activeModal.name === 'removeMentor'" v-slot:content>
               <Confirm
                 :confirm-question="
                   `Do you really want to delete mentor: ${selectedMentor.fullname} ?`
@@ -61,10 +70,25 @@
                 @close="modalState = 'hidden'"
               />
             </template>
+            <template
+              v-else-if="activeModal.name === 'addMentor'"
+              v-slot:content
+            >
+              <mentor-form
+                :initial-values="selectedMentor"
+                @close="closeModal"
+                @submit="addMentor($event)"
+              />
+            </template>
           </Modal>
           <Toast
             v-if="toastState == 'removed'"
             title="Mentor has been removed !"
+            @close="toastState = 'hidden'"
+          />
+          <Toast
+            v-if="toastState == 'created'"
+            :title="'Mentor has been created successfully at ' + updateDate"
             @close="toastState = 'hidden'"
           />
           <Toast
@@ -93,7 +117,9 @@ import Avatar from "theme/Avatar";
 import Modal from "theme/Modal";
 import Confirm from "theme/Confirm";
 import Toast from "theme/Toast";
-import { fetchMentors, removeMentor } from "../requests.js";
+import MentorForm from "./MentorForm";
+import { fetchMentors, removeMentor, createMentor } from "../requests.js";
+import { format } from "date-fns";
 
 export default {
   name: "Mentors",
@@ -104,7 +130,8 @@ export default {
     Avatar,
     Modal,
     Confirm,
-    Toast
+    Toast,
+    MentorForm
   },
   data() {
     return {
@@ -119,7 +146,9 @@ export default {
       queryPhone: "",
       queryCompany: "",
       selectedMentor: {},
+      activeModal: {},
       toastState: "hidden",
+      updateDate: format(new Date(), "dd LLLL yyyy"),
       headings: [
         {
           key: "avatar",
@@ -182,7 +211,7 @@ export default {
           name: "delete",
           icon: "far fa-trash-alt",
           class: "btn-secondary-dark",
-          fn: d => this.openModal(d)
+          fn: d => this.openModal("removeMentor", d)
         }
       ],
       queries: [
@@ -305,6 +334,16 @@ export default {
           );
       else filteredMentors = this.sortedMentors;
       return filteredMentors;
+    },
+    modalTitle() {
+      switch (this.activeModal.name) {
+        case "addMentor":
+          return "Add mentor";
+        case "removeMentor":
+          return "Delete mentor";
+        default:
+          return "";
+      }
     }
   },
   mounted() {
@@ -334,8 +373,12 @@ export default {
     closeModal() {
       this.modalState = "hidden";
     },
-    openModal(user) {
+    openModal(modalName, user) {
       this.modalState = "visible";
+      this.activeModal = {
+        name: modalName,
+        mentor: user
+      };
       this.selectedMentor = user;
     },
     deleteMentor() {
@@ -347,6 +390,35 @@ export default {
           this.mentors = this.mentors.filter(
             mentor => mentor.id !== this.selectedMentor.id
           );
+        })
+        .catch(error => {
+          this.error = error;
+          this.modalState = "hidden";
+          if (this.error.error) {
+            this.toastState = "errorMessage";
+          } else {
+            this.toastState = "error";
+          }
+        });
+    },
+    addMentor(mentor) {
+      this.modalState = "loading";
+      createMentor(mentor)
+        .then(res => {
+          const mentorData = res.data;
+          const id = mentorData.id;
+          const createdAt = mentorData.createdAt;
+
+          // since no newMentor in response, the new one is hardcoded
+          const newMentor = {
+            ...mentor,
+            id,
+            fullname: mentor.first_name + " " + mentor.last_name
+          };
+          this.updateDate = format(new Date(createdAt), "dd LLLL yyyy HH:mm");
+          this.modalState = "hidden";
+          this.toastState = "created";
+          this.mentors.push(newMentor);
         })
         .catch(error => {
           this.error = error;

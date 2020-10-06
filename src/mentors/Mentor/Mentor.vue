@@ -116,6 +116,12 @@
         @close="toastState = 'hidden'"
       />
       <Toast
+        v-if="toastState == 'apiError'"
+        error
+        title="It is faked data. No such a user in hosted API!"
+        @close="toastState = 'hidden'"
+      />
+      <Toast
         v-if="toastState == 'errorMessage'"
         error
         :title="error.error"
@@ -142,6 +148,7 @@ import Navbar from "theme/Navbar/Navbar";
 import Loader from "theme/Loader";
 import Toast from "theme/Toast";
 import { fetchMentor, updateMentorData } from "../requests.js";
+import { isEmailValid, isPhoneNumberValid } from "theme/utils/validate.js";
 
 export default {
   name: "Mentor",
@@ -233,11 +240,15 @@ export default {
         .catch(error => {
           this.error = error;
           this.state = "error";
+          if (this.error.error) {
+            this.toastState = "errorMessage";
+          } else {
+            this.toastState = "apiError";
+          }
         });
     },
     checkIfEmailValid(key, val) {
-      const re = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
-      const isValid = re.test(String(val).toLowerCase());
+      const isValid = isEmailValid(val);
       if (!isValid) {
         this.toastState = "emailError";
       } else {
@@ -245,7 +256,7 @@ export default {
       }
     },
     checkIfPhoneNumberValid(key, val) {
-      const isValid = /^\d{9}$/.test(val);
+      const isValid = isPhoneNumberValid(val);
       if (!isValid) {
         this.toastState = "phoneError";
       } else {
