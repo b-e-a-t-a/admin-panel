@@ -13,6 +13,7 @@ $btn-color-secondary-hovered: darken($color-secondary, 10%)
 $btn-color-secondary-disabled: lighten($color-secondary, 50%)
 
 $btn-color-gradient: $color-gradient
+$btn-color-gradient-brown: $color-gradient-brown
 
 =btn_color($color, $background: null, $text: null)
   @if $background
@@ -59,6 +60,11 @@ $btn-color-gradient: $color-gradient
 
 =gradient-border($b-radius: $b-radius)
   background: $color-gradient padding-box, $color-gradient border-box
+  border: 2px solid transparent
+  border-radius: $b-radius
+
+=gradient-border-brown($b-radius: $b-radius)
+  background: $color-gradient-brown padding-box, $color-gradient-brown border-box
   border: 2px solid transparent
   border-radius: $b-radius
 
@@ -194,6 +200,24 @@ $btn-color-gradient: $color-gradient
     +hover_and_active
       +btn_color($btn-color-gradient, $btn-color-gradient, $color-white)
       +gradient-border
+      background: $color-gradient-light padding-box, $color-gradient-light border-box
+
+=btn-gradient-brown
+  +btn_basic
+  +btn_color($btn-color-gradient-brown, $btn-color-gradient-brown, $color-white)
+  +gradient-border-brown
+
+  +hover_and_active
+    +btn_color($color-secondary-dark, $color-white, $color-secondary-dark)
+    +gradient-border-brown
+    background: $color-gradient-light padding-box, $color-gradient-light border-box
+    border: 1px solid $color-secondary-dark
+
+  +disabled
+    opacity: .5
+    +hover_and_active
+      +btn_color($btn-color-gradient-brown, $btn-color-gradient-brown, $color-white)
+      +gradient-border-brown
       background: $color-gradient-light padding-box, $color-gradient-light border-box
 
 =btn-gradient-light
@@ -385,6 +409,9 @@ $btn-color-gradient: $color-gradient
 
   .btn-gradient
     +btn-gradient
+
+  .btn-gradient-brown
+    +btn-gradient-brown
 
   .btn-gradient-light
     +btn-gradient-light

@@ -5,11 +5,13 @@ export const fetchMentors = () => {
 };
 
 export const fetchMentor = mentorId => {
-  axios.get(`https://reqres.in/api/users/${mentorId}`).then(response => {
-    return response;
-  });
+  return axios.get(`https://reqres.in/api/users/${mentorId}`);
 };
 
 export const removeMentor = mentorId => {
   return axios.delete(`https://reqres.in/api/users/${mentorId}`);
+};
+
+export const updateMentorData = (mentorId, data) => {
+  return axios.put(`https://reqres.in/api/users/${mentorId}`, { data });
 };

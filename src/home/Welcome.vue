@@ -72,6 +72,11 @@
             btn-ghost-secondary
           </button>
         </div>
+        <div class="Welcome__button">
+          <button class="btn-default-tall btn-wide btn-white">
+            btn-white
+          </button>
+        </div>
       </div>
 
       <h2>buttons gradient & color</h2>
@@ -92,8 +97,8 @@
           </button>
         </div>
         <div class="Welcome__button">
-          <button class="btn-default-tall btn-wide btn-white">
-            btn-white
+          <button class="btn-default-tall btn-wide btn-gradient-brown">
+            btn-gradient-brown
           </button>
         </div>
       </div>
