@@ -193,6 +193,8 @@ $gutter-width: 4rem
 
     &.actions
       text-align: right
+    .responsive
+      display: none
 
   tr
     transition: background .3s
@@ -200,6 +202,52 @@ $gutter-width: 4rem
       cursor: pointer
       &:hover
         background: rgba($color-border, .5)
+
+  +screen-sm-minus
+    th
+      display: none
+
+    tbody
+      +flex
+
+      tr
+        flex: 1 1 100%
+        margin-bottom: 2em
+        border: 1px solid $color-secondary
+
+        td
+          display: block
+          text-align: center
+          border: 0
+          border-bottom: 1px solid $color-secondary-super-light
+          &:last-child
+            border-bottom: 0
+          .responsive
+            display: block
+        &:hover
+          td
+            &:not(:last-child)
+              border-bottom: 1px solid $color-secondary-light
+
+
+    .isRowSearchable
+      display: none
+
+    +table_responsive
+
+=table_responsive
+  tbody
+    tr
+      td
+        +flex
+        flex: 1 1 100%
+        justify-content: space-between
+
+        .responsive
+          text-align: left
+          flex: 25%
+          align-self: center
+          +weight-bold
 
 =underline($weight: 1px, $color: $color-bg)
   border-bottom: $weight solid $color

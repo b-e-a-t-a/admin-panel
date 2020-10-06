@@ -44,7 +44,7 @@ export default {
       return text;
     }
   }
-}
+};
 </script>
 
 <style lang="sass" scoped>

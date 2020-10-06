@@ -88,6 +88,9 @@
                 @click.stop
               />
             </div>
+
+            <div class="responsive">{{ label.name }}</div>
+
             <slot name="cell" :data="d" :i="i" :heading="key">
               {{ d[key] || d[label] }}
             </slot>
