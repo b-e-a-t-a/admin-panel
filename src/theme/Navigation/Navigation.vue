@@ -46,7 +46,7 @@
 <script>
 const navLinks = [
   { to: "/mentors", label: "Mentors", icon: "fas fa-chalkboard-teacher" },
-  { to: "/users", label: "Users", icon: "fas fa-users" },
+  { to: "/members", label: "Members", icon: "fas fa-users" },
   { to: "/sessions", label: "Sessions", icon: "fas fa-comments" }
 ];
 

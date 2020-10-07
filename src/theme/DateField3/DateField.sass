@@ -1,0 +1,26 @@
+@import "~theme/common-style"
+
+.DateField
+  &__field
+    +form-group
+
+    &.block
+      +form-group-block
+
+    &.readOnly
+      opacity: .5
+      pointer-events: none
+
+    &Error
+      +input-error
+
+    input:focus,
+    textarea:focus
+      +gradient-border-greyBg
+      border-radius: 5px
+
+    label
+      text-align: right
+
+
+  &__input

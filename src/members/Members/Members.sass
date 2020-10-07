@@ -1,0 +1,61 @@
+@import "~theme/common-style"
+
+.Members
+  &__header
+    margin-bottom: 2rem
+
+  &__options
+    display: flex
+    align-items: center
+    justify-content: flex-end
+    margin: 2rem 0
+    button
+      float: right
+
+  .noResults
+    margin-top: 2rem
+    color: $color-danger
+
+  &__form
+    &Info
+      margin-top: 3rem
+      text-align: left
+      +p-s
+    &Btns
+      +modal-buttons
+    .error
+      color: $color-danger
+
+  &__customSelect
+    margin-top: 1.8rem
+    +form-group
+    &.block
+      +form-group-block
+
+    &.readOnly
+      opacity: .5
+      pointer-events: none
+
+    &Error
+      +input-error
+
+    label
+      text-align: right
+
+    select
+      +input
+      text-indent: 0
+      option
+        color: $color-black
+    select
+      +screen-xs
+        +form-group-block
+        width: 100%
+        margin-top: .5rem
+
+  ._id
+    break-word: all
+    +screen-md-minus
+      max-width: 7rem
+    +screen-sm-minus
+      max-width: 100%

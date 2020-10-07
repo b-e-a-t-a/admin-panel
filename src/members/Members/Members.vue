@@ -1,32 +1,32 @@
 <template>
-  <div class="Mentors page">
+  <div class="Members page">
     <Navbar />
     <div class="container">
       <loader v-if="state == 'loading'" />
       <div class="card">
-        <div class="Mentors__header">
-          <h2>Mentors list</h2>
+        <div class="Members__header">
+          <h2>Members list</h2>
         </div>
-        <div class="Mentors__options">
+        <div class="Members__options">
           <button
             class="btn-standard btn-default-medium btn-gradient-dark"
             @click="() => openModal('addMentor', {})"
           >
             <i class="fas fa-user-plus"></i>
-            Add mentor
+            Add member
           </button>
         </div>
-        <div class="Mentors__content">
-          <h3 class="Mentors__contentHeader">
+        <div class="Members__content">
+          <h3 class="Members__contentHeader">
             <span
-              v-if="!mentors.length && state !== 'loading'"
+              v-if="!members.length && state !== 'loading'"
               class="noResults"
             >
-              No mentors yet
+              No members yet
             </span>
           </h3>
           <Table
-            v-if="mentors.length"
+            v-if="members.length"
             :headings="headings"
             :data="filteredMentors"
             is-row-sortable
@@ -39,6 +39,9 @@
               <span v-if="headings[heading].key == 'avatar'">
                 <Avatar :user="data" isBordered />
               </span>
+              <span v-else-if="headings[heading].key == 'registered'">
+                {{ format(data[headings[heading].key], "dd.LL.yyyy") }}
+              </span>
               <span v-else>
                 {{ data[headings[heading].key] }}
               </span>
@@ -47,7 +50,7 @@
           <div class="noResults">
             <h4
               v-if="
-                mentors.length &&
+                members.length &&
                   filteredMentors.length == 0 &&
                   state !== 'loading'
               "
@@ -63,10 +66,10 @@
             <template v-if="activeModal.name === 'removeMentor'" v-slot:content>
               <Confirm
                 :confirm-question="
-                  `Do you really want to delete mentor: ${selectedMentor.fullname} ?`
+                  `Do you really want to delete member: ${selectedMentor.fullname} ?`
                 "
                 :button-text="'Yes'"
-                @accept="deleteMentor(selectedMentor.id)"
+                @accept="deleteMember(selectedMentor.id)"
                 @close="modalState = 'hidden'"
               />
             </template>
@@ -74,21 +77,23 @@
               v-else-if="activeModal.name === 'addMentor'"
               v-slot:content
             >
-              <mentor-form
+              <member-form
                 :initial-values="selectedMentor"
                 @close="closeModal"
-                @submit="addMentor($event)"
+                @submit="addMember($event)"
               />
             </template>
           </Modal>
           <Toast
             v-if="toastState == 'removed'"
-            title="Mentor has been removed !"
+            title="Member has been removed from list!"
             @close="toastState = 'hidden'"
           />
           <Toast
             v-if="toastState == 'created'"
-            :title="'Mentor has been created successfully at ' + updateDate"
+            :title="
+              'Mocked member has been added to the table at ' + updateDate
+            "
             @close="toastState = 'hidden'"
           />
           <Toast
@@ -117,12 +122,13 @@ import Avatar from "theme/Avatar";
 import Modal from "theme/Modal";
 import Confirm from "theme/Confirm";
 import Toast from "theme/Toast";
-import MentorForm from "./MentorForm";
-import { fetchMentors, removeMentor, createMentor } from "../requests.js";
+import MemberForm from "./MemberForm";
+import { fetchMembers } from "../requests.js";
 import { format } from "date-fns";
+import { generateRandomId } from "theme/utils/helpers.js";
 
 export default {
-  name: "Mentors",
+  name: "Members",
   components: {
     Navbar,
     Loader,
@@ -131,20 +137,20 @@ export default {
     Modal,
     Confirm,
     Toast,
-    MentorForm
+    MemberForm
   },
   data() {
     return {
       state: null,
       error: null,
+      format,
       modalState: "hidden",
-      mentors: [],
-      queryName: "",
-      querySurname: "",
+      members: [],
       queryFullname: "",
+      queryCountry: "",
+      queryAge: "",
       queryEmail: "",
       queryPhone: "",
-      queryCompany: "",
       selectedMentor: {},
       activeModal: {},
       toastState: "hidden",
@@ -161,18 +167,24 @@ export default {
           isRowSortable: true
         },
         {
-          key: "first_name",
-          name: "Name",
-          isRowSortable: true
-        },
-        {
-          key: "last_name",
-          name: "Surname",
-          isRowSortable: true
-        },
-        {
           key: "fullname",
           name: "Fullname",
+          isRowSortable: true
+        },
+        {
+          key: "country",
+          name: "Country",
+          isRowSortable: true
+        },
+
+        {
+          key: "age",
+          name: "Age",
+          isRowSortable: true
+        },
+        {
+          key: "registered",
+          name: "Joined",
           isRowSortable: true
         },
         {
@@ -183,11 +195,6 @@ export default {
         {
           key: "phone",
           name: "Phone",
-          isRowSortable: true
-        },
-        {
-          key: "company",
-          name: "Company",
           isRowSortable: true
         },
         {
@@ -203,9 +210,8 @@ export default {
       rowActions: [
         {
           name: "edit",
-          icon: "fas fa-edit",
-          tooltip: "More",
-          fn: d => this.$router.push(`/mentors/${d.id}`)
+          icon: "fas fa-info-circle",
+          fn: d => this.$router.push(`/members/${d.id}`)
         },
         {
           name: "delete",
@@ -224,22 +230,26 @@ export default {
           searchable: false
         },
         {
-          key: "first_name",
-          searchText: this.queryName,
-          placeholder: "search name",
-          searchable: true
-        },
-        {
-          key: "last_name",
-          searchText: this.querySurname,
-          placeholder: "search surname",
-          searchable: true
-        },
-        {
           key: "fullname",
           searchText: this.queryFullname,
           placeholder: "search fullname",
           searchable: true
+        },
+        {
+          key: "country",
+          searchText: this.queryCountry,
+          placeholder: "search country",
+          searchable: true
+        },
+        {
+          key: "age",
+          searchText: this.queryAge,
+          placeholder: "search age",
+          searchable: true
+        },
+        {
+          key: "registered",
+          searchable: false
         },
         {
           key: "email",
@@ -254,12 +264,6 @@ export default {
           searchable: true
         },
         {
-          key: "company",
-          searchText: this.queryCompany,
-          placeholder: "search company",
-          searchable: true
-        },
-        {
           key: "actions",
           searchable: false
         }
@@ -268,54 +272,43 @@ export default {
   },
   computed: {
     sortedMentors() {
-      const mentors = this.mentors.slice().sort((a, b) => {
+      const members = this.members.slice().sort((a, b) => {
         switch (this.sortBy.key) {
           case "id":
-            return a.id - b.id;
-          case "first_name":
-            return a.first_name.trim().localeCompare(b.first_name.trim());
-          case "last_name":
-            return a.last_name.trim().localeCompare(b.last_name.trim());
+            return a.id.trim().localeCompare(b.id.trim());
           case "fullname":
             return a.fullname.trim().localeCompare(b.fullname.trim());
+          case "country":
+            return a.country.trim().localeCompare(b.country.trim());
+          case "age":
+            return a.age - b.age;
+          case "registered":
+            return new Date(a.registered) - new Date(b.registered);
           case "email":
             return a.email.localeCompare(b.email);
           case "phone":
-            return a.phone - b.phone;
-          case "company":
-            return a.company.trim().localeCompare(b.company.trim());
+            return a.phone.trim().localeCompare(b.phone.trim());
           default:
             return 0;
         }
       });
-      if (this.sortBy.direction == "asc") return mentors;
+      if (this.sortBy.direction == "asc") return members;
       else if (this.sortBy.direction == "desc")
-        return mentors.slice().reverse();
-      return this.mentors;
+        return members.slice().reverse();
+      return this.members;
     },
     filteredMentors() {
       let filteredMentors;
-      const sName = this.queries.find(q => q.key == "first_name").searchText || "";
-      const sSurname = this.queries.find(q => q.key == "last_name").searchText || "";
       const sFullname = this.queries.find(q => q.key == "fullname").searchText || "";
+      const sCountry = this.queries.find(q => q.key == "country").searchText || "";
+      const sAge = this.queries.find(q => q.key == "age").searchText || "";
       const sEmail = this.queries.find(q => q.key == "email").searchText || "";
       const sPhone = this.queries.find(q => q.key == "phone").searchText || "";
-      const sCompany = this.queries.find(q => q.key == "company").searchText || "";
 
-      const anySearch = sName || sSurname || sFullname || sEmail || sPhone || sCompany;
+      const anySearch = sAge || sFullname || sEmail || sPhone || sCountry;
 
       if (anySearch)
         filteredMentors = this.sortedMentors
-          .filter(
-            s =>
-              s.first_name &&
-              s.first_name.toLowerCase().indexOf(sName.toLowerCase()) !== -1
-          )
-          .filter(
-            s =>
-              s.last_name &&
-              s.last_name.toLowerCase().indexOf(sSurname.toLowerCase()) !== -1
-          )
           .filter(
             u =>
               u.fullname &&
@@ -323,27 +316,41 @@ export default {
           )
           .filter(
             u =>
+              u.country &&
+              u.country.toLowerCase().indexOf(sCountry.toLowerCase()) !== -1
+          )
+          .filter(s => s.age && s.age.indexOf(sAge) !== -1)
+          .filter(
+            u =>
               u.email &&
               u.email.toLowerCase().indexOf(sEmail.toLowerCase()) !== -1
           )
-          .filter(u => u.phone && u.phone.indexOf(sPhone) !== -1)
-          .filter(
-            u =>
-              u.company &&
-              u.company.toLowerCase().indexOf(sCompany.toLowerCase()) !== -1
-          );
+          .filter(u => u.phone && u.phone.indexOf(sPhone) !== -1);
       else filteredMentors = this.sortedMentors;
       return filteredMentors;
     },
     modalTitle() {
       switch (this.activeModal.name) {
         case "addMentor":
-          return "Add mentor";
+          return "Add member";
         case "removeMentor":
-          return "Delete mentor";
+          return "Delete member";
         default:
           return "";
       }
+    },
+    generateApiTokenBasedId() {
+      const randomId =
+        generateRandomId() +
+        "-" +
+        generateRandomId(4) +
+        "-" +
+        generateRandomId(4) +
+        "-" +
+        generateRandomId(4) +
+        "-" +
+        generateRandomId(12);
+      return randomId.toString();
     }
   },
   mounted() {
@@ -352,16 +359,26 @@ export default {
   methods: {
     getMentors() {
       this.state = "loading";
-      return fetchMentors()
+      return fetchMembers()
         .then(response => {
-          const companyData = response.data.ad;
-          this.mentors = response.data.data.map(mentor => ({
-            ...mentor,
-            company: companyData.company,
-            companyUrl: companyData.url,
-            aboutMe: companyData.text,
-            phone: Math.floor(100000000 + Math.random() * 900000000).toString(),
-            fullname: mentor.first_name + " " + mentor.last_name
+          const data = response.data.results;
+          this.members = data.map(member => ({
+            id: member.login.uuid,
+            name: member.name.first,
+            surname: member.name.last,
+            fullname:
+              member.name.title +
+              " " +
+              member.name.first +
+              " " +
+              member.name.last,
+            country: member.nat,
+            email: member.email,
+            phone: member.phone,
+            gender: member.gender,
+            age: member.dob.age,
+            avatar: member.picture.thumbnail,
+            registered: new Date(member.registered.date)
           }));
           this.state = "loaded";
         })
@@ -377,63 +394,44 @@ export default {
       this.modalState = "visible";
       this.activeModal = {
         name: modalName,
-        mentor: user
+        member: user
       };
       this.selectedMentor = user;
     },
-    deleteMentor() {
+    deleteMember() {
       this.modalState = "loading";
-      removeMentor(this.selectedMentor.id)
-        .then(() => {
-          this.modalState = "hidden";
-          this.toastState = "removed";
-          this.mentors = this.mentors.filter(
-            mentor => mentor.id !== this.selectedMentor.id
-          );
-        })
-        .catch(error => {
-          this.error = error;
-          this.modalState = "hidden";
-          if (this.error.error) {
-            this.toastState = "errorMessage";
-          } else {
-            this.toastState = "error";
-          }
-        });
+      setTimeout(() => {
+        this.modalState = "hidden";
+        this.toastState = "removed";
+        this.members = this.members.filter(
+          member => member.id !== this.selectedMentor.id
+        );
+      }, 500);
     },
-    addMentor(mentor) {
+    addMember(member) {
       this.modalState = "loading";
-      createMentor(mentor)
-        .then(res => {
-          const mentorData = res.data;
-          const id = mentorData.id;
-          const createdAt = mentorData.createdAt;
 
-          // since no newMentor in response, the new one is hardcoded
-          const newMentor = {
-            ...mentor,
-            id,
-            fullname: mentor.first_name + " " + mentor.last_name
-          };
-          this.updateDate = format(new Date(createdAt), "dd LLLL yyyy HH:mm");
-          this.modalState = "hidden";
-          this.toastState = "created";
-          this.mentors.push(newMentor);
-        })
-        .catch(error => {
-          this.error = error;
-          this.modalState = "hidden";
-          if (this.error.error) {
-            this.toastState = "errorMessage";
-          } else {
-            this.toastState = "error";
-          }
-        });
+      // since API does not support POST/PATCH/PUT, the new one is hard-coded
+      const newMember = {
+        ...member,
+        id: this.generateApiTokenBasedId,
+        fullname: member.name + " " + member.surname
+      };
+      this.updateDate = format(
+        new Date(member.registered),
+        "dd LLLL yyyy HH:mm"
+      );
+
+      setTimeout(() => {
+        this.modalState = "hidden";
+        this.toastState = "created";
+        this.members.push(newMember);
+      }, 500);
     }
   }
 };
 </script>
 
 <style lang="sass" scoped>
-@import "./Mentors"
+@import "./Members"
 </style>

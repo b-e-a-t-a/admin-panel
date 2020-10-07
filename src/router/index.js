@@ -28,6 +28,18 @@ const routes = [
     name: "Mentor",
     component: () =>
       import(/* webpackChunkName: "mentor" */ "../mentors/Mentor/Mentor.vue")
+  },
+  {
+    path: "/members",
+    name: "Members",
+    component: () =>
+      import(/* webpackChunkName: "members" */ "../members/Members/Members.vue")
+  },
+  {
+    path: "/members/:memberId",
+    name: "Member",
+    component: () =>
+      import(/* webpackChunkName: "member" */ "../members/Member/Member.vue")
   }
 ];
 
