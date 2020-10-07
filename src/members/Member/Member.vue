@@ -4,7 +4,7 @@
     <div class="container">
       <loader v-if="state == 'loading'" />
       <div class="Member__header">
-        <h2>{{ mentor.fullname }}</h2>
+        <h2>{{ member.fullname }}</h2>
       </div>
       <div class="Member__content">
         <div class="Member__details p">
@@ -17,16 +17,19 @@
                 </div>
 
                 <div v-if="!edition[item.value]" class="value">
-                  {{ mentor[item.value] || "no data" }}
+                  {{ member[item.value] || "no data" }}
                 </div>
                 <div v-else class="value">
-                  <textarea
-                    v-if="item.value == 'aboutMe'"
-                    v-model="item[item.value]"
-                    name="aboutMe"
-                    class="aboutMe"
-                    @keyup.enter="changeData('aboutMe', item[item.value])"
-                    @keyup.esc="finishEdition('aboutMe')"
+                  <input
+                    v-if="item.value == 'age'"
+                    v-model.number="item[item.value]"
+                    name="age"
+                    class="age"
+                    type="number"
+                    :min="18"
+                    max="120"
+                    @keyup.enter="changeData('age', item[item.value])"
+                    @keyup.esc="finishEdition('age')"
                   />
                   <input
                     v-else
@@ -61,15 +64,15 @@
               </div>
             </div>
 
-            <h4>Company data</h4>
-            <div :key="item.id" v-for="item in companyItems">
+            <h4>Location data</h4>
+            <div :key="item.id" v-for="item in locationItems">
               <div class="Member__item">
                 <div class="key" :class="{ beingEdited: edition[item.value] }">
                   {{ item.label }}
                 </div>
 
                 <div v-if="!edition[item.value]" class="value">
-                  {{ mentor[item.value] || "no data" }}
+                  {{ member[item.value] || "no data" }}
                 </div>
                 <div v-else class="value">
                   <input
@@ -116,18 +119,6 @@
         @close="toastState = 'hidden'"
       />
       <Toast
-        v-if="toastState == 'apiError'"
-        error
-        title="It is faked data. No such a user in hosted API!"
-        @close="toastState = 'hidden'"
-      />
-      <Toast
-        v-if="toastState == 'errorMessage'"
-        error
-        :title="error.error"
-        @close="toastState = 'hidden'"
-      />
-      <Toast
         v-if="toastState == 'emailError'"
         error
         title="Email format is invalid. Check your data and try again."
@@ -147,7 +138,6 @@
 import Navbar from "theme/Navbar/Navbar";
 import Loader from "theme/Loader";
 import Toast from "theme/Toast";
-import { fetchMember, updateMentorData } from "../requests.js";
 import { isEmailValid, isPhoneNumberValid } from "theme/utils/validate.js";
 
 export default {
@@ -161,34 +151,53 @@ export default {
     return {
       state: null,
       error: null,
-      mentorId: this.$route.params.mentorId,
-      mentor: {},
+      memberId: this.$route.params.id,
+      member: this.$route.params,
       toastState: "hidden",
-      first_name: "",
-      last_name: "",
+      title: "",
+      firstname: "",
+      surname: "",
+      username: "",
       email: "",
       phone: "",
-      aboutMe: "",
-      company: "",
-      companyUrl: "",
+      gender: "",
+      age: "",
+      country: "",
+      street: "",
+      city: "",
+      postcode: "",
       edition: {
-        first_name: false,
-        last_name: false,
+        title: false,
+        firstname: false,
+        surname: false,
+        username: false,
         email: false,
         phone: false,
-        aboutMe: false,
-        company: false,
-        companyUrl: false
+        gender: false,
+        age: false,
+        country: false,
+        street: false,
+        city: false,
+        postcode: false
       },
       items: [
         {
+          label: "Title",
+          value: "title",
+          title: ""
+        },
+        {
           label: "Name",
-          value: "first_name",
-          first_name: ""
+          value: "firstname",
+          firstname: ""
         },
         {
           label: "Surname",
-          value: "last_name"
+          value: "surname"
+        },
+        {
+          label: "Username",
+          value: "username"
         },
         {
           label: "Email",
@@ -199,53 +208,45 @@ export default {
           value: "phone"
         },
         {
-          label: "About me",
-          value: "aboutMe"
-        }
-      ],
-      companyItems: [
-        {
-          label: "Company name",
-          value: "company",
-          company: ""
+          label: "Gender",
+          value: "gender"
         },
         {
-          label: "Company www",
-          value: "companyUrl"
+          label: "Age",
+          value: "age"
+        }
+      ],
+      locationItems: [
+        {
+          label: "Country code",
+          value: "country",
+          country: ""
+        },
+        {
+          label: "Street",
+          value: "street",
+          street: ""
+        },
+        {
+          label: "City",
+          value: "city"
+        },
+        {
+          label: "Postcode",
+          value: "postcode"
         }
       ]
     };
   },
   mounted() {
-    this.state = "loading";
-    this.getMentor();
+    this.getMember();
   },
   methods: {
-    getMentor() {
-      return fetchMember(this.mentorId)
-        .then(response => {
-          const data = response.data.data;
-          const companyData = response.data.ad;
-
-          this.mentor = {
-            ...data,
-            fullname: data.first_name + " " + data.last_name,
-            company: companyData.company,
-            companyUrl: companyData.url,
-            aboutMe: companyData.text,
-            phone: Math.floor(100000000 + Math.random() * 900000000).toString()
-          };
-          this.state = "loaded";
-        })
-        .catch(error => {
-          this.error = error;
-          this.state = "error";
-          if (this.error.error) {
-            this.toastState = "errorMessage";
-          } else {
-            this.toastState = "apiError";
-          }
-        });
+    getMember() {
+      this.member = {
+        ...this.member,
+        firstname: this.member.name
+      };
     },
     checkIfEmailValid(key, val) {
       const isValid = isEmailValid(val);
@@ -270,27 +271,15 @@ export default {
     },
     changeData(key, val) {
       this.edition[key] = false;
-      let mentorObject = Object.assign({}, this.mentor);
-      mentorObject.name = val;
-      this.mentor = mentorObject;
-      this.mentor[key] = val;
-      const data = { [key]: val };
+      let memberObject = Object.assign({}, this.member);
+      memberObject.name = val;
+      this.member = memberObject;
+      this.member[key] = val;
       this.state = "loading";
-
-      updateMentorData(this.mentorId, data)
-        .then(() => {
-          this.state = "loaded";
-          this.toastState = "updated";
-        })
-        .catch(error => {
-          this.error = error;
-          this.state = "error";
-          if (this.error.error) {
-            this.toastState = "errorMessage";
-          } else {
-            this.toastState = "error";
-          }
-        });
+      setTimeout(() => {
+        this.state = "loaded";
+        this.toastState = "updated";
+      }, 500);
     },
     finishEdition(key) {
       this.edition[key] = false;
@@ -298,21 +287,26 @@ export default {
       this.toastState = "hidden";
     },
     setEditables(key) {
-      this[key] = this.mentor[key];
+      this[key] = this.member[key];
     },
     edit(el) {
       this.edition[el] = true;
-      this.first_name = this.mentor.first_name;
-      this.last_name = this.mentor.last_name;
-      this.email = this.mentor.email;
-      this.phone = this.mentor.phone;
-      this.aboutMe = this.mentor.aboutMe;
-      this.company = this.mentor.company;
-      this.companyUrl = this.mentor.companyUrl;
+      this.firstname = this.member.firstname;
+      this.surname = this.member.surname;
+      this.email = this.member.email;
+      this.phone = this.member.phone;
+      this.gender = this.member.gender;
+      this.title = this.member.title;
+      this.username = this.member.username;
+      this.age = this.member.age;
+      this.country = this.member.country;
+      this.street = this.member.street;
+      this.city = this.member.city;
+      this.postcode = this.member.postcode;
       const personalItem = this.items.find(item => item.value == el);
-      const companyItem = this.companyItems.find(i => i.value == el);
+      const companyItem = this.locationItems.find(i => i.value == el);
       const item = personalItem || companyItem;
-      item[el] = this.mentor[el];
+      item[el] = this.member[el];
     }
   }
 };

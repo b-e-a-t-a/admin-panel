@@ -10,7 +10,7 @@
         <div class="Members__options">
           <button
             class="btn-standard btn-default-medium btn-gradient-dark"
-            @click="() => openModal('addMentor', {})"
+            @click="() => openModal('addMember', {})"
           >
             <i class="fas fa-user-plus"></i>
             Add member
@@ -28,7 +28,7 @@
           <Table
             v-if="members.length"
             :headings="headings"
-            :data="filteredMentors"
+            :data="filteredMembers"
             is-row-sortable
             is-row-searchable
             :queries="queries"
@@ -51,7 +51,7 @@
             <h4
               v-if="
                 members.length &&
-                  filteredMentors.length == 0 &&
+                  filteredMembers.length == 0 &&
                   state !== 'loading'
               "
             >
@@ -63,22 +63,22 @@
               <loader class="sectionOnly" />
             </template>
             <template v-slot:header>{{ modalTitle }}</template>
-            <template v-if="activeModal.name === 'removeMentor'" v-slot:content>
+            <template v-if="activeModal.name === 'removeMember'" v-slot:content>
               <Confirm
                 :confirm-question="
-                  `Do you really want to delete member: ${selectedMentor.fullname} ?`
+                  `Do you really want to delete member: ${selectedMember.fullname} ?`
                 "
                 :button-text="'Yes'"
-                @accept="deleteMember(selectedMentor.id)"
+                @accept="deleteMember(selectedMember.id)"
                 @close="modalState = 'hidden'"
               />
             </template>
             <template
-              v-else-if="activeModal.name === 'addMentor'"
+              v-else-if="activeModal.name === 'addMember'"
               v-slot:content
             >
               <member-form
-                :initial-values="selectedMentor"
+                :initial-values="selectedMember"
                 @close="closeModal"
                 @submit="addMember($event)"
               />
@@ -151,7 +151,7 @@ export default {
       queryAge: "",
       queryEmail: "",
       queryPhone: "",
-      selectedMentor: {},
+      selectedMember: {},
       activeModal: {},
       toastState: "hidden",
       updateDate: format(new Date(), "dd LLLL yyyy"),
@@ -211,13 +211,13 @@ export default {
         {
           name: "edit",
           icon: "fas fa-info-circle",
-          fn: d => this.$router.push(`/members/${d.id}`)
+          fn: d => this.$router.push({ name: "Member", params: { ...d }})
         },
         {
           name: "delete",
           icon: "far fa-trash-alt",
           class: "btn-secondary-dark",
-          fn: d => this.openModal("removeMentor", d)
+          fn: d => this.openModal("removeMember", d)
         }
       ],
       queries: [
@@ -271,7 +271,7 @@ export default {
     };
   },
   computed: {
-    sortedMentors() {
+    sortedMembers() {
       const members = this.members.slice().sort((a, b) => {
         switch (this.sortBy.key) {
           case "id":
@@ -297,8 +297,8 @@ export default {
         return members.slice().reverse();
       return this.members;
     },
-    filteredMentors() {
-      let filteredMentors;
+    filteredMembers() {
+      let filteredMembers;
       const sFullname = this.queries.find(q => q.key == "fullname").searchText || "";
       const sCountry = this.queries.find(q => q.key == "country").searchText || "";
       const sAge = this.queries.find(q => q.key == "age").searchText || "";
@@ -308,7 +308,7 @@ export default {
       const anySearch = sAge || sFullname || sEmail || sPhone || sCountry;
 
       if (anySearch)
-        filteredMentors = this.sortedMentors
+        filteredMembers = this.sortedMembers
           .filter(
             u =>
               u.fullname &&
@@ -326,14 +326,14 @@ export default {
               u.email.toLowerCase().indexOf(sEmail.toLowerCase()) !== -1
           )
           .filter(u => u.phone && u.phone.indexOf(sPhone) !== -1);
-      else filteredMentors = this.sortedMentors;
-      return filteredMentors;
+      else filteredMembers = this.sortedMembers;
+      return filteredMembers;
     },
     modalTitle() {
       switch (this.activeModal.name) {
-        case "addMentor":
+        case "addMember":
           return "Add member";
-        case "removeMentor":
+        case "removeMember":
           return "Delete member";
         default:
           return "";
@@ -354,10 +354,10 @@ export default {
     }
   },
   mounted() {
-    this.getMentors();
+    this.getMembers();
   },
   methods: {
-    getMentors() {
+    getMembers() {
       this.state = "loading";
       return fetchMembers()
         .then(response => {
@@ -378,7 +378,17 @@ export default {
             gender: member.gender,
             age: member.dob.age,
             avatar: member.picture.thumbnail,
-            registered: new Date(member.registered.date)
+            registered: new Date(member.registered.date),
+            street:
+              member.location.street && member.location.street.name
+                ? member.location.street.name +
+                  " " +
+                  member.location.street.number
+                : member.location.street,
+            city: member.location.city,
+            postcode: member.location.postcode,
+            title: member.name.title,
+            username: member.login.username
           }));
           this.state = "loaded";
         })
@@ -396,7 +406,7 @@ export default {
         name: modalName,
         member: user
       };
-      this.selectedMentor = user;
+      this.selectedMember = user;
     },
     deleteMember() {
       this.modalState = "loading";
@@ -404,7 +414,7 @@ export default {
         this.modalState = "hidden";
         this.toastState = "removed";
         this.members = this.members.filter(
-          member => member.id !== this.selectedMentor.id
+          member => member.id !== this.selectedMember.id
         );
       }, 500);
     },

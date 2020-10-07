@@ -57,7 +57,7 @@ export default {
       navLinks,
       activeLink: navLinks.find(l => this.$route.path.indexOf(l.to) == 0),
       menuVisible: false
-    }
+    };
   },
   watch: {
     $route(to) {
