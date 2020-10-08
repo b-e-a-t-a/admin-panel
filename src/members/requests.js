@@ -1,5 +1,5 @@
 import axios from "axios";
 
-export const fetchMembers = () => {
-  return axios.get("https://randomuser.me/api/?results=50");
+export const fetchMembers = (numberOfResults = 100) => {
+  return axios.get(`https://randomuser.me/api/?results=${numberOfResults}`);
 };

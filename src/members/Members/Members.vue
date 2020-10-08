@@ -7,6 +7,33 @@
         <div class="Members__header">
           <h2>Members list</h2>
         </div>
+        <div class="Members__paginationInfo perPage">
+          <div class="Members__customSelect">
+            <label for="results-select">Results per page</label>
+            <select
+              id="results-select"
+              name="results"
+              v-model="selectedResultsPerPage"
+            >
+              <option v-for="(item, key) in itemsPerPage" :key="'item-' + key">
+                {{ item }}
+              </option>
+            </select>
+          </div>
+        </div>
+        <div class="Members__paginationInfo">
+          <div>Page {{ currentPage + 1 }} of {{ totalPages }}</div>
+          <div>
+            Showing {{ currentPage * selectedResultsPerPage + 1 }} to
+            {{
+              currentPage * selectedResultsPerPage +
+                (selectedResultsPerPage * 100) / 100
+            }}
+            results
+          </div>
+          <div>Total results: {{ members.length }}</div>
+        </div>
+
         <div class="Members__options">
           <button
             class="btn-standard btn-default-medium btn-gradient-dark"
@@ -28,7 +55,7 @@
           <Table
             v-if="members.length"
             :headings="headings"
-            :data="filteredMembers"
+            :data="usersToShow"
             is-row-sortable
             is-row-searchable
             :queries="queries"
@@ -58,6 +85,32 @@
               No search results. Change search query and try again
             </h4>
           </div>
+
+          <div class="Members__paginationButtons">
+            <button
+              class="pageBtn"
+              :class="{ disabled: currentPage == 0 }"
+              :disabled="currentPage == 0"
+              @click="handlePreviousPage"
+            >
+              <i class="fas fa-angle-left"></i>
+              <span class="bolded">{{ currentPage }}</span>
+            </button>
+            <button class="pageBtn activePage">
+              <span class="bolded">{{ currentPage + 1 }}</span>
+              <span></span>
+            </button>
+            <button
+              class="pageBtn"
+              :class="{ disabled: disabledNextButton }"
+              :disabled="disabledNextButton"
+              @click="handleNextPage"
+            >
+              <i class="fas fa-angle-right"></i>
+              <span class="bolded">{{ currentPage + 2 }}</span>
+            </button>
+          </div>
+
           <Modal v-if="modalState != 'hidden'" @close="closeModal">
             <template v-if="modalState == 'loading'" v-slot:loader>
               <loader class="sectionOnly" />
@@ -155,6 +208,11 @@ export default {
       activeModal: {},
       toastState: "hidden",
       updateDate: format(new Date(), "dd LLLL yyyy"),
+      numberOfMembers: 100,
+      currentPage: 0,
+      selectedResultsPerPage: 100,
+      itemsPerPage: [10, 20, 50, 100, 500, 4000],
+      usersToShow: [],
       headings: [
         {
           key: "avatar",
@@ -319,7 +377,7 @@ export default {
               u.country &&
               u.country.toLowerCase().indexOf(sCountry.toLowerCase()) !== -1
           )
-          .filter(s => s.age && s.age.indexOf(sAge) !== -1)
+          .filter(s => s.age && s.age.toString().indexOf(sAge) !== -1)
           .filter(
             u =>
               u.email &&
@@ -351,15 +409,52 @@ export default {
         "-" +
         generateRandomId(12);
       return randomId.toString();
+    },
+    totalPages() {
+      const total = Math.ceil(
+        this.numberOfMembers / this.selectedResultsPerPage
+      );
+      return total;
+    },
+    disabledNextButton() {
+      const isFilterApplied = this.filteredMembers.length !== this.members.length;
+      const equalsCount =
+        this.usersToShow.length == this.members.length &&
+        this.members.length == this.selectedResultsPerPage;
+      const pageFrom = this.currentPage + 1;
+      const pageTo = this.totalPages;
+
+      const isLastPage = equalsCount
+        ? this.usersToShow.length <= this.selectedResultsPerPage
+        : pageFrom == pageTo;
+
+      if (isFilterApplied) {
+        return true;
+      } else return isLastPage;
     }
   },
   mounted() {
     this.getMembers();
   },
+  watch: {
+    selectedResultsPerPage(newVal) {
+      this.usersToShow = this.members.slice(0, newVal);
+      this.currentPage = 0;
+      this.filteredMembers = this.members;
+      this.queryFullname = "";
+      this.queryCountry = "";
+      this.queryAge = "";
+      this.queryEmail = "";
+      this.queryPhone = "";
+    },
+    filteredMembers(newVal) {
+      this.usersToShow = newVal;
+    }
+  },
   methods: {
     getMembers() {
       this.state = "loading";
-      return fetchMembers()
+      return fetchMembers(this.numberOfMembers)
         .then(response => {
           const data = response.data.results;
           this.members = data.map(member => ({
@@ -390,6 +485,7 @@ export default {
             title: member.name.title,
             username: member.login.username
           }));
+          this.usersToShow = this.members;
           this.state = "loaded";
         })
         .catch(error => {
@@ -437,6 +533,44 @@ export default {
         this.toastState = "created";
         this.members.push(newMember);
       }, 500);
+    },
+    handlePreviousPage() {
+      this.state = "loading";
+      const selectedResultsPerPage = Number(this.selectedResultsPerPage);
+      const currentPageStart = this.currentPage * selectedResultsPerPage + 1;
+      const previousPageEnd = currentPageStart - 1;
+      const previousPageStart = previousPageEnd + 1 - selectedResultsPerPage;
+      this.usersToShow = this.members.slice(
+        previousPageStart - 1,
+        previousPageEnd
+      );
+
+      this.currentPage--;
+
+      window.scroll({
+        top: 0,
+        left: 0,
+        behavior: "smooth"
+      });
+      this.state = "loaded";
+    },
+    handleNextPage() {
+      this.state = "loading";
+      const selectedResultsPerPage = Number(this.selectedResultsPerPage);
+      const currentPageStart = this.currentPage * selectedResultsPerPage + 1;
+      const currentPageEnd = currentPageStart + selectedResultsPerPage - 1;
+      const nextPageStart = currentPageEnd + 1;
+      const nextPageEnd = nextPageStart + selectedResultsPerPage - 1;
+      this.usersToShow = this.members.slice(nextPageStart - 1, nextPageEnd);
+
+      this.currentPage++;
+
+      window.scroll({
+        top: 0,
+        left: 0,
+        behavior: "smooth"
+      });
+      this.state = "loaded";
     }
   }
 };
