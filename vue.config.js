@@ -9,5 +9,6 @@ module.exports = {
       extensions: [".js", ".vue"],
       modules: [path.resolve("./src"), "node_modules"]
     }
-  }
-}
+  },
+  publicPath: process.env.NODE_ENV === "production" ? "/admin-panel/" : "/"
+};
