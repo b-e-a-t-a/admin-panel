@@ -1,5 +1,10 @@
 # admin-project
 
+Vue.js 3.x, date-fns, vue-router, axios, public API sources
+
+Project published here: https://b-e-a-t-a.github.io/admin-panel/
+
+
 ## Project setup
 ```
 npm install
@@ -20,5 +25,3 @@ npm run build
 npm run lint
 ```
 
-### Customize configuration
-See [Configuration Reference](https://cli.vuejs.org/config/).
