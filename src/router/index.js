@@ -42,6 +42,16 @@ const routes = [
     props: true,
     component: () =>
       import(/* webpackChunkName: "member" */ "../members/Member/Member.vue")
+  },
+  {
+    path: "/sessions",
+    name: "Sessions",
+    component: () =>
+      import(/* webpackChunkName: "sessions" */ "../sessions/Sessions.vue")
+  },
+  {
+    path: "/:pathMatch(.*)",
+    component: Home
   }
 ];
 
