@@ -295,14 +295,19 @@ export default {
     },
     filteredMentors() {
       let filteredMentors;
-      const sName = this.queries.find(q => q.key == "first_name").searchText || "";
-      const sSurname = this.queries.find(q => q.key == "last_name").searchText || "";
-      const sFullname = this.queries.find(q => q.key == "fullname").searchText || "";
+      const sName =
+        this.queries.find(q => q.key == "first_name").searchText || "";
+      const sSurname =
+        this.queries.find(q => q.key == "last_name").searchText || "";
+      const sFullname =
+        this.queries.find(q => q.key == "fullname").searchText || "";
       const sEmail = this.queries.find(q => q.key == "email").searchText || "";
       const sPhone = this.queries.find(q => q.key == "phone").searchText || "";
-      const sCompany = this.queries.find(q => q.key == "company").searchText || "";
+      const sCompany =
+        this.queries.find(q => q.key == "company").searchText || "";
 
-      const anySearch = sName || sSurname || sFullname || sEmail || sPhone || sCompany;
+      const anySearch =
+        sName || sSurname || sFullname || sEmail || sPhone || sCompany;
 
       if (anySearch)
         filteredMentors = this.sortedMentors

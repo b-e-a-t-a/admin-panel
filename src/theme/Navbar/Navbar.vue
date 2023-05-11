@@ -42,7 +42,7 @@ export default {
   data() {
     return {
       menuVisible: false
-    }
+    };
   },
   methods: {
     goBack() {

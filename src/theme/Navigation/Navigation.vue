@@ -38,7 +38,6 @@
           </div>
         </transition>
       </div>
-
     </nav>
   </div>
 </template>

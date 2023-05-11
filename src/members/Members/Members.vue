@@ -269,7 +269,7 @@ export default {
         {
           name: "edit",
           icon: "fas fa-info-circle",
-          fn: d => this.$router.push({ name: "Member", params: { ...d }})
+          fn: d => this.$router.push({ name: "Member", params: { ...d } })
         },
         {
           name: "delete",
@@ -357,8 +357,10 @@ export default {
     },
     filteredMembers() {
       let filteredMembers;
-      const sFullname = this.queries.find(q => q.key == "fullname").searchText || "";
-      const sCountry = this.queries.find(q => q.key == "country").searchText || "";
+      const sFullname =
+        this.queries.find(q => q.key == "fullname").searchText || "";
+      const sCountry =
+        this.queries.find(q => q.key == "country").searchText || "";
       const sAge = this.queries.find(q => q.key == "age").searchText || "";
       const sEmail = this.queries.find(q => q.key == "email").searchText || "";
       const sPhone = this.queries.find(q => q.key == "phone").searchText || "";
