@@ -225,7 +225,11 @@ export default {
       return fetchMentor(this.mentorId)
         .then(response => {
           const data = response.data.data;
-          const companyData = response.data.ad;
+          const companyData = response.data.ad || {
+            company: 'LEARN - Learning with us co',
+            url: 'https://www.google.com',
+            text: 'We provide a lot of powerful tools...'
+          };
 
           this.mentor = {
             ...data,
