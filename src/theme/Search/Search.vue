@@ -4,6 +4,12 @@
       <i class="fas fa-search"></i>
     </span>
     <input
+      :id="
+        'id' +
+          Math.random()
+            .toString(16)
+            .slice(2)
+      "
       class="Search-text p-s"
       maxlen
       :placeholder="shortenText(placeholder, maxlen)"
@@ -21,6 +27,7 @@ export default {
     maxlen: Number,
     searchText: String
   },
+  emits: ["update:searchText"],
   methods: {
     shortenText(text, maxLen = 15) {
       if (!text) return "";

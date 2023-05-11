@@ -197,6 +197,7 @@ export default {
     placeholder: String,
     maxlen: Number
   },
+  emits: ["row-click", "double-row-click", "select-row", "update:sortBy"],
   computed: {
     firstColumn() {
       return Object.keys(this.headings)[0];

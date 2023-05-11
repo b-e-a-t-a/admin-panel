@@ -357,7 +357,7 @@ export default {
           const companyData = response.data.ad || {};
           this.mentors = response.data.data.map(mentor => ({
             ...mentor,
-            company: companyData.company || 'LEARN - Learning with us co',
+            company: companyData.company || "LEARN - Learning with us co",
             companyUrl: companyData.url,
             aboutMe: companyData.text,
             phone: Math.floor(100000000 + Math.random() * 900000000).toString(),

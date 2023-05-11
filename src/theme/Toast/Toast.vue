@@ -27,6 +27,7 @@ export default {
     close: Function,
     error: Boolean
   },
+  emits: ["close"],
   mounted() {
     setTimeout(() => this.$emit("close"), 5000);
   }

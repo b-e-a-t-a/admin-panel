@@ -37,6 +37,7 @@ export default {
   props: {
     map: Boolean
   },
+  emits: ["close"],
   mounted() {
     this.$refs.modal.focus();
   }

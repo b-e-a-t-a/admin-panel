@@ -24,7 +24,8 @@ export default {
   props: {
     confirmQuestion: String,
     buttonText: String
-  }
+  },
+  emits: ["accept", "close"]
 };
 </script>
 

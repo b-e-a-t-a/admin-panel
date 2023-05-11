@@ -130,6 +130,7 @@ export default {
       default: false
     }
   },
+  emits: ["close", "submit"],
   data() {
     return {
       firstName: "",

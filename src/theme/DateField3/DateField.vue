@@ -57,7 +57,8 @@ export default {
     weekStartsOn: Number,
     disabled: Boolean,
     value: [String, Function, Date, Number, Object]
-  }
+  },
+  emits: ["update:value"]
 };
 </script>
 

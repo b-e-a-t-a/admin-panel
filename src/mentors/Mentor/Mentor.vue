@@ -31,6 +31,7 @@
                   <input
                     v-else
                     v-model="item[item.value]"
+                    :id="`${item.value}`"
                     type="text"
                     :name="`${item.value}`"
                     :class="`${item.value}`"
@@ -74,6 +75,7 @@
                 <div v-else class="value">
                   <input
                     v-model="item[item.value]"
+                    :id="`${item.value}`"
                     type="text"
                     :name="`${item.value}`"
                     :class="`${item.value}`"
@@ -226,9 +228,9 @@ export default {
         .then(response => {
           const data = response.data.data;
           const companyData = response.data.ad || {
-            company: 'LEARN - Learning with us co',
-            url: 'https://www.google.com',
-            text: 'We provide a lot of powerful tools...'
+            company: "LEARN - Learning with us co",
+            url: "https://www.google.com",
+            text: "We provide a lot of powerful tools..."
           };
 
           this.mentor = {

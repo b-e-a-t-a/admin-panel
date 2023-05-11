@@ -52,6 +52,7 @@ export default {
     disabledDate: [String, Function, Date, Number, Object],
     value: [String, Function, Date, Number, Object]
   },
+  emits: ["update:value"],
   data() {
     return {
       lang: {
