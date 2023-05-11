@@ -7,9 +7,9 @@
         <i class="fas fa-chalkboard-teacher" />
         <h3 class="Welcome__text">Mentors</h3>
       </div>
-      <div class="Welcome__icon" @click="this.$router.push('/users')">
+      <div class="Welcome__icon" @click="this.$router.push('/members')">
         <i class="fas fa-users" />
-        <h3 class="Welcome__text">Users</h3>
+        <h3 class="Welcome__text">Members</h3>
       </div>
       <div class="Welcome__icon" @click="this.$router.push('/sessions')">
         <i class="fas fa-comments" />

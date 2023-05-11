@@ -417,7 +417,8 @@ export default {
       return total;
     },
     disabledNextButton() {
-      const isFilterApplied = this.filteredMembers.length !== this.members.length;
+      const isFilterApplied =
+        this.filteredMembers.length !== this.members.length;
       const equalsCount =
         this.usersToShow.length == this.members.length &&
         this.members.length == this.selectedResultsPerPage;
